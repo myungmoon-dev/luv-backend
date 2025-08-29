@@ -37,16 +37,16 @@ public class AlbumService {
 
 		List<String> imageUrls = cloudflareService.uploadImages(requestDto.getImages());
 
-		Album album = Album.builder()
+		Album newAlbum = Album.builder()
 			.title(requestDto.getTitle())
 			.date(requestDto.getDate())
 			.type(requestDto.getType())
 			.imageUrls(imageUrls)
 			.build();
-		albumRepository.save(album);
+		Album savedAlbum = albumRepository.save(newAlbum);
 
 		return AlbumResponseDto.builder()
-			.album(album)
+			.album(savedAlbum)
 			.build();
 	}
 }

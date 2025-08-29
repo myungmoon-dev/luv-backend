@@ -8,4 +8,4 @@ spring:
 cloudflare:
   images:
     account-id: ${CLOUDFLARE_ACCOUNT_ID}
-    api-token: ${CLOUDFLARE_API_KEY}
+    api-key: ${CLOUDFLARE_API_KEY}

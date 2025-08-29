@@ -30,8 +30,8 @@ public class CloudflareService {
 	@Value("${cloudflare.images.account-id}")
 	private String accountId;
 
-	@Value("${cloudflare.images.api-token}")
-	private String apiToken;
+	@Value("${cloudflare.images.api-key}")
+	private String apiKey;
 
 	private final ObjectMapper objectMapper;
 	private final RestClient restClient;
@@ -85,7 +85,7 @@ public class CloudflareService {
 		String response = restClient.post()
 			.uri(url)
 			.headers(headers -> {
-				headers.setBearerAuth(apiToken);
+				headers.setBearerAuth(apiKey);
 				headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 			})
 			.body(body)
