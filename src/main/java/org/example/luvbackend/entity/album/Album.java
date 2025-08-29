@@ -19,7 +19,7 @@ public class Album extends BaseEntity {
 
 	private String title;
 	private String date;
-	private AlbumType type;
+	private AlbumType type; // DB 에는 AlbumType.value()로 저장되고 있음
 	private List<String> imageUrls;
 
 	public String getType() {

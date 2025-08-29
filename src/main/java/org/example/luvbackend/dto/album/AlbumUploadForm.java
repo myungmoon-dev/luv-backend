@@ -1,8 +1,9 @@
 package org.example.luvbackend.dto.album;
 
+import java.time.LocalDate;
 import java.util.List;
 
-import org.example.luvbackend.entity.album.AlbumType;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotBlank;
@@ -21,11 +22,12 @@ public class AlbumUploadForm {
 	@Size(max = 100, message = "앨범제목은 100자를 넘을 수 없습니다.")
 	private String title;
 
-	@NotBlank(message = "앨범날짜는 필수 입력값입니다.")
-	private String date;
+	@NotNull(message = "앨범날짜는 필수 입력값입니다.")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate date;
 
 	@NotNull(message = "앨범종류는 필수 입력값입니다.")
-	private AlbumType type;
+	private String type;
 
 	@NotEmpty(message = "이미지는 최소 1개이상 업로드해야합니다.")
 	@Size(min = 1, max = 5, message = "이미지는 최소1개, 최대5개까지 한번에 업로드 가능합니다.")

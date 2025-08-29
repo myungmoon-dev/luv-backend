@@ -5,6 +5,7 @@ import java.util.List;
 import org.example.luvbackend.dto.album.AlbumUploadForm;
 import org.example.luvbackend.dto.album.AlbumResponseDto;
 import org.example.luvbackend.entity.album.Album;
+import org.example.luvbackend.entity.album.AlbumType;
 import org.example.luvbackend.repository.AlbumRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,13 +35,14 @@ public class AlbumService {
 
 	@Transactional
 	public AlbumResponseDto createAlbum(AlbumUploadForm requestDto) {
-
+		// 1) Cloudflare에 이미지 업로드
 		List<String> imageUrls = cloudflareService.uploadImages(requestDto.getImages());
 
+		// 2) DB에 이미지경로와 함께 데이터 저장
 		Album newAlbum = Album.builder()
 			.title(requestDto.getTitle())
-			.date(requestDto.getDate())
-			.type(requestDto.getType())
+			.date(requestDto.getDate().toString())
+			.type(AlbumType.deserialize(requestDto.getType()))
 			.imageUrls(imageUrls)
 			.build();
 		Album savedAlbum = albumRepository.save(newAlbum);

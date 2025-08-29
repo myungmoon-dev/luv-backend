@@ -6,8 +6,11 @@ import org.example.luvbackend.exception.album.AlbumExceptionCode;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Getter
 @RequiredArgsConstructor
 public enum AlbumType {
 	ALL("all"),
@@ -26,15 +29,9 @@ public enum AlbumType {
 
 	private final String value;
 
-	@JsonValue
-	public String getValue(){
-		return value;
-	}
-
-	@JsonCreator
-	public static AlbumType deserialize(String fromDB){
+	public static AlbumType deserialize(String type){
 		for(AlbumType albumType : AlbumType.values()){
-			if(albumType.getValue().equalsIgnoreCase(fromDB)){
+			if(albumType.getValue().equalsIgnoreCase(type.trim())){
 				return albumType;
 			}
 		}
