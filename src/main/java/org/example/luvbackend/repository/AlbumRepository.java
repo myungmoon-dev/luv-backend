@@ -1,9 +1,16 @@
 package org.example.luvbackend.repository;
 
 import org.example.luvbackend.entity.album.Album;
+import org.example.luvbackend.exception.album.AlbumException;
+import org.example.luvbackend.exception.album.AlbumExceptionCode;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AlbumRepository extends MongoRepository<Album, String> {
+	default Album findByIdOrElseThrow(String albumId) {
+		return findById(albumId)
+			.orElseThrow(() ->
+				new AlbumException(AlbumExceptionCode.NOT_FOUND_ALBUM_OBJECT));
+	}
 }
