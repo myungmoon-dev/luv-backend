@@ -2,9 +2,13 @@ package org.example.luvbackend.service;
 
 import java.util.List;
 
-import org.example.luvbackend.dto.AlbumResponseDto;
+import org.example.luvbackend.dto.album.AlbumUploadForm;
+import org.example.luvbackend.dto.album.AlbumResponseDto;
+import org.example.luvbackend.entity.album.Album;
+import org.example.luvbackend.entity.album.AlbumType;
 import org.example.luvbackend.repository.AlbumRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -12,10 +16,39 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AlbumService {
 	private final AlbumRepository albumRepository;
+	private final CloudflareService cloudflareService;
 
+	@Transactional(readOnly = true)
 	public List<AlbumResponseDto> getAlbums() {
 		return albumRepository.findAll()
 			.stream().map(AlbumResponseDto::new)
 			.toList();
+	}
+
+	@Transactional(readOnly = true)
+	public AlbumResponseDto getAlbum(String id) {
+		Album fromDB = albumRepository.findByIdOrElseThrow(id);
+		return AlbumResponseDto.builder()
+			.album(fromDB)
+			.build();
+	}
+
+	@Transactional
+	public AlbumResponseDto createAlbum(AlbumUploadForm requestDto) {
+		// 1) Cloudflare에 이미지 업로드
+		List<String> imageUrls = cloudflareService.uploadImages(requestDto.getImages());
+
+		// 2) DB에 이미지경로와 함께 데이터 저장
+		Album newAlbum = Album.builder()
+			.title(requestDto.getTitle())
+			.date(requestDto.getDate().toString())
+			.type(AlbumType.deserialize(requestDto.getType()))
+			.imageUrls(imageUrls)
+			.build();
+		Album savedAlbum = albumRepository.save(newAlbum);
+
+		return AlbumResponseDto.builder()
+			.album(savedAlbum)
+			.build();
 	}
 }
