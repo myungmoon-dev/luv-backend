@@ -15,12 +15,14 @@ import org.example.luvbackend.exception.aws.AwsS3Exception;
 import org.example.luvbackend.exception.aws.AwsS3ExceptionCode;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AwsS3Service {
@@ -88,11 +90,18 @@ public class AwsS3Service {
 	}
 
 	/**
-	 * 다건 파일 삭제
+	 * 다건 파일 삭제 (best-effort: 개별 실패 시 로그만 남기고 계속 진행)
+	 * - 보상 삭제 용도로 사용되므로 예외를 전파하지 않음
 	 */
 	public void deleteFiles(List<String> fileUrls) {
 		if (fileUrls == null || fileUrls.isEmpty()) return;
-		fileUrls.forEach(this::deleteFile);
+		fileUrls.forEach(url -> {
+			try {
+				deleteFile(url);
+			} catch (Exception e) {
+				log.warn("S3 파일 삭제 실패 (보상 삭제): url={}", url, e);
+			}
+		});
 	}
 
 	/**
