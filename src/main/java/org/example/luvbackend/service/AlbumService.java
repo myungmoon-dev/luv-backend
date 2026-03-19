@@ -2,53 +2,68 @@ package org.example.luvbackend.service;
 
 import java.util.List;
 
+import org.example.luvbackend.common.dto.PageResponse;
+import org.example.luvbackend.dto.aws.S3Directory;
 import org.example.luvbackend.dto.album.AlbumUploadForm;
 import org.example.luvbackend.dto.album.AlbumResponseDto;
 import org.example.luvbackend.entity.album.Album;
 import org.example.luvbackend.entity.album.AlbumType;
 import org.example.luvbackend.repository.AlbumRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AlbumService {
 	private final AlbumRepository albumRepository;
-	private final CloudflareService cloudflareService;
+	private final AwsS3Service awsS3Service;
 
+	/**
+	 * 다건 앨범 데이터 조회 메서드
+	 */
 	@Transactional(readOnly = true)
-	public List<AlbumResponseDto> getAlbums() {
-		return albumRepository.findAll()
-			.stream().map(AlbumResponseDto::new)
-			.toList();
+	public PageResponse<AlbumResponseDto> getAlbums(String type, int page, int size) {
+		// 앨범타입을 입력 안했을 경우
+		if (type.isBlank()) {
+			Pageable pageable = PageRequest.of(page, size);
+			return PageResponse.of(albumRepository.findAllByOrderByCreatedAtDesc(pageable)
+					.map(AlbumResponseDto::from));
+		}
+
+		AlbumType albumType = AlbumType.deserialize(type);
+		return PageResponse.of(albumRepository.findByTypeOrderByCreatedAtDesc(albumType, PageRequest.of(page, size))
+				.map(AlbumResponseDto::from)
+		);
 	}
 
+	/**
+	 * 단건 앨범데이터 조회 메서드
+	 */
 	@Transactional(readOnly = true)
 	public AlbumResponseDto getAlbum(String id) {
-		Album fromDB = albumRepository.findByIdOrElseThrow(id);
-		return AlbumResponseDto.builder()
-			.album(fromDB)
-			.build();
+		return AlbumResponseDto.from(albumRepository.findByIdOrElseThrow(id));
 	}
 
+	/**
+	 * 단건 앨범 생성 메서드
+	 */
 	@Transactional
 	public AlbumResponseDto createAlbum(AlbumUploadForm requestDto) {
-		// 1) Cloudflare에 이미지 업로드
-		List<String> imageUrls = cloudflareService.uploadImages(requestDto.getImages());
+		List<String> imageUrls = awsS3Service.uploadFiles(requestDto.getImages(), S3Directory.ALBUMS);
+		return AlbumResponseDto.from(albumRepository.save(Album.of(requestDto, imageUrls)));
+	}
 
-		// 2) DB에 이미지경로와 함께 데이터 저장
-		Album newAlbum = Album.builder()
-			.title(requestDto.getTitle())
-			.date(requestDto.getDate().toString())
-			.type(AlbumType.deserialize(requestDto.getType()))
-			.imageUrls(imageUrls)
-			.build();
-		Album savedAlbum = albumRepository.save(newAlbum);
-
-		return AlbumResponseDto.builder()
-			.album(savedAlbum)
-			.build();
+	/**
+	 * 단건 앨범데이터 삭제 메서드
+	 */
+	@Transactional
+	public void deleteAlbum(String id) {
+		albumRepository.delete(albumRepository.findByIdOrElseThrow(id));
 	}
 }

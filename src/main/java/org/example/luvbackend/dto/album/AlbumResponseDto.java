@@ -1,29 +1,38 @@
 package org.example.luvbackend.dto.album;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.example.luvbackend.entity.album.Album;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class AlbumResponseDto {
 	private final String id;
-	private final String title;
-	private final String date;
-	private final String albumType;
-	private final List<String> imageUrls;
-	private final String createdAt;
+	private final String title; // 앨범 제목
+	private final String date; // 행사 날짜
+	private final String albumType; // 앨범타입
+	private final List<String> imageUrls; // 앨범 이미지 리스트
+	private final String createdAt; // 생성날짜
 
-	@Builder
-	public AlbumResponseDto(Album album){
+	@Builder(access = AccessLevel.PRIVATE)
+	private AlbumResponseDto(Album album) {
 		this.id = album.getId();
 		this.title = album.getTitle();
 		this.date = album.getDate();
 		this.albumType = album.getType();
 		this.imageUrls = album.getImageUrls();
-		this.createdAt = album.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));;
+		this.createdAt = album.getFormattedCreatedAt();
+	}
+
+	/**
+	 * 정적 팩토리 메서드
+	 */
+	public static AlbumResponseDto from(Album album){
+		return AlbumResponseDto.builder()
+			.album(album)
+			.build();
 	}
 }
