@@ -68,10 +68,10 @@ public class BookService {
 	 */
 	@Transactional
 	public void deleteBook(String id) {
-		Book book = bookRepository.findByIdOrElseThrow(id);
+		Book fromDB = bookRepository.findByIdOrElseThrow(id);
 
-		awsS3Service.deleteFiles(book.getImageUrls()); // 이미지 삭제
-		bookRepository.delete(book); // DB 삭제
+		awsS3Service.deleteFiles(fromDB.getImageUrls()); // 이미지 삭제
+		bookRepository.delete(fromDB); // DB 삭제
 	}
 
 }

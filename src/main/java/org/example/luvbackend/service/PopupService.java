@@ -62,6 +62,9 @@ public class PopupService {
 
 	@Transactional
 	public void deletePopup(String id) {
-		popupRepository.delete(popupRepository.findByIdOrElseThrow(id));
+		Popup fromDB = popupRepository.findByIdOrElseThrow(id);
+
+		awsS3Service.deleteFile(fromDB.getImageUrl());
+		popupRepository.delete(fromDB);
 	}
 }

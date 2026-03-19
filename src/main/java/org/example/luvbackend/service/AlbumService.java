@@ -64,6 +64,9 @@ public class AlbumService {
 	 */
 	@Transactional
 	public void deleteAlbum(String id) {
-		albumRepository.delete(albumRepository.findByIdOrElseThrow(id));
+		Album fromDB = albumRepository.findByIdOrElseThrow(id);
+
+		awsS3Service.deleteFiles(fromDB.getImageUrls()); // 이미지 삭제
+		albumRepository.delete(fromDB); // DB 삭제
 	}
 }

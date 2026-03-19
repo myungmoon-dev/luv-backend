@@ -73,7 +73,10 @@ public class MissionNewsService {
 	 */
 	@Transactional
 	public void deleteMissionNews(String id) {
-		missionNewsRepository.delete(missionNewsRepository.findByIdOrElseThrow(id));
+		MissionNews fromDB = missionNewsRepository.findByIdOrElseThrow(id);
+
+		awsS3Service.deleteFiles(fromDB.getImageUrls()); // 이미지 삭제
+		missionNewsRepository.delete(fromDB); // DB 삭제
 	}
 
 }

@@ -53,6 +53,9 @@ public class BulletinService {
 	 */
 	@Transactional
 	public void deleteBulletin(String id) {
-		bulletinRepository.delete(bulletinRepository.findByIdOrElseThrow(id));
+		Bulletin fromDB = bulletinRepository.findByIdOrElseThrow(id);
+
+		awsS3Service.deleteFiles(fromDB.getImageUrls()); // 이미지 삭제
+		bulletinRepository.delete(fromDB); // DB 삭제
 	}
 }
