@@ -21,8 +21,14 @@ public enum VideoType {
 	private final String value;
 
 	public static VideoType deserialize(String type) {
+		// VideoException 예외처리
+		if (type == null || type.isBlank()) {
+			throw new VideoException(VideoExceptionCode.ILLEGAL_VIDEO_TYPE);
+		}
+
+		String normalized = type.trim();
 		for (VideoType videoType : VideoType.values()) {
-			if (videoType.getValue().equalsIgnoreCase(type.trim())) {
+			if (videoType.getValue().equalsIgnoreCase(normalized)) {
 				return videoType;
 			}
 		}

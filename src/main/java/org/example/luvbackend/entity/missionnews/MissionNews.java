@@ -61,6 +61,6 @@ public class MissionNews extends BaseEntity {
 		if (userName != null) this.userName = userName;
 		if (date != null) this.date = date;
 		if (location != null) this.location = location;
-		if (!imageUrls.isEmpty()) this.imageUrls = imageUrls;
+		if (imageUrls != null && !imageUrls.isEmpty()) this.imageUrls = imageUrls;
 	}
 }

@@ -63,7 +63,7 @@ public class HomeWorship extends BaseEntity {
 		if (date != null) this.date = date;
 		if (title != null) this.title = title;
 		if (content != null) this.content = content;
-		if (!imageUrls.isEmpty()) this.imageUrls = imageUrls;
+		if (imageUrls != null && !imageUrls.isEmpty()) this.imageUrls = imageUrls;
 	}
 
 	public void addComment(HomeWorshipComment comment) {

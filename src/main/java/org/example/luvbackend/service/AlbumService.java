@@ -30,7 +30,7 @@ public class AlbumService {
 	@Transactional(readOnly = true)
 	public PageResponse<AlbumResponseDto> getAlbums(String type, int page, int size) {
 		// 앨범타입을 입력 안했을 경우
-		if (type.isBlank()) {
+		if (type == null || type.isBlank()) {
 			Pageable pageable = PageRequest.of(page, size);
 			return PageResponse.of(albumRepository.findAllByOrderByCreatedAtDesc(pageable)
 					.map(AlbumResponseDto::from));
