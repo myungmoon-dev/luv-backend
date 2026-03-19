@@ -15,8 +15,3 @@ spring:
         secret-key: ${AWS_S3_SECRET_KEY}
       region:
         static: ap-northeast-2
-## CLOUDFLARE
-cloudflare:
-  images:
-    account-id: ${CLOUDFLARE_ACCOUNT_ID}
-    api-key: ${CLOUDFLARE_API_KEY}

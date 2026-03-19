@@ -16,7 +16,7 @@ spring:
       region:
         static: ap-northeast-2
 ## CLOUDFLARE
-cloudflare:
-  images:
-    account-id: ${CLOUDFLARE_ACCOUNT_ID}
-    api-key: ${CLOUDFLARE_API_KEY}
+#cloudflare:
+#  images:
+#    account-id: ${CLOUDFLARE_ACCOUNT_ID}
+#    api-key: ${CLOUDFLARE_API_KEY}
