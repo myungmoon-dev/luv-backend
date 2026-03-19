@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.example.luvbackend.entity.bible.BibleLink;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +21,7 @@ public class BibleCreateForm {
 	private String title;
 
 	@NotNull(message = "날짜는 필수 입력값입니다.")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate date;
 
 	@NotBlank(message = "내용은 필수 입력값입니다.")
