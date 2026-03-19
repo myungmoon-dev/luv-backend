@@ -15,7 +15,7 @@ public class AlbumResponseDto {
 	private final String date; // 행사 날짜
 	private final String albumType; // 앨범타입
 	private final List<String> imageUrls; // 앨범 이미지 리스트
-	private final String createdAt; // 생성날짜
+	private final Long createdAt;
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private AlbumResponseDto(Album album) {
@@ -24,7 +24,7 @@ public class AlbumResponseDto {
 		this.date = album.getDate();
 		this.albumType = album.getType();
 		this.imageUrls = album.getImageUrls();
-		this.createdAt = album.getFormattedCreatedAt();
+		this.createdAt = album.getCreatedAt();
 	}
 
 	/**

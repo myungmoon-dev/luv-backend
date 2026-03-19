@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.example.luvbackend.entity.book.Book;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,11 +16,11 @@ public class BookResponseDto {
 	private final String writer;
 	private final String date;
 	private final List<String> imageUrls;
-	private final String createdAt;
+	private final Long createdAt;
 
-	@Builder
+	@Builder(access = AccessLevel.PRIVATE)
 	private BookResponseDto(String id, String title, String content, String writer,
-		String date, List<String> imageUrls, String createdAt) {
+		String date, List<String> imageUrls, Long createdAt) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
@@ -29,9 +30,6 @@ public class BookResponseDto {
 		this.createdAt = createdAt;
 	}
 
-	/**
-	 * 정적 팩토리 메서드
-	 */
 	public static BookResponseDto from(Book book) {
 		return BookResponseDto.builder()
 			.id(book.getId())
@@ -40,7 +38,7 @@ public class BookResponseDto {
 			.writer(book.getWriter())
 			.date(book.getDate())
 			.imageUrls(book.getImageUrls())
-			.createdAt(book.getFormattedCreatedAt())
+			.createdAt(book.getCreatedAt())
 			.build();
 	}
 }

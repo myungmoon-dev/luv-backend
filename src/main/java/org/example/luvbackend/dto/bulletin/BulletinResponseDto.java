@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.example.luvbackend.entity.bulletin.Bulletin;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,10 +14,10 @@ public class BulletinResponseDto {
 	private final String date;
 	private final String title;
 	private final List<String> imageUrls;
-	private final String createdAt;
+	private final Long createdAt;
 
 	@Builder
-	private BulletinResponseDto(String id, String date, String title, List<String> imageUrls, String createdAt) {
+	private BulletinResponseDto(String id, String date, String title, List<String> imageUrls, Long createdAt) {
 		this.id = id;
 		this.date = date;
 		this.title = title;
@@ -29,11 +30,11 @@ public class BulletinResponseDto {
 	 */
 	public static BulletinResponseDto from(Bulletin bulletin) {
 		return BulletinResponseDto.builder()
-				.id(bulletin.getId())
-				.date(bulletin.getDate())
-				.title(bulletin.getTitle())
-				.imageUrls(bulletin.getImageUrls())
-				.createdAt(bulletin.getFormattedCreatedAt())
-				.build();
+			.id(bulletin.getId())
+			.date(bulletin.getDate())
+			.title(bulletin.getTitle())
+			.imageUrls(bulletin.getImageUrls())
+			.createdAt(bulletin.getCreatedAt())
+			.build();
 	}
 }
