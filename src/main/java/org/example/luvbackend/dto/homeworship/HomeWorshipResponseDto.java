@@ -1,6 +1,5 @@
 package org.example.luvbackend.dto.homeworship;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.example.luvbackend.entity.homeworship.HomeWorship;
@@ -19,8 +18,8 @@ public class HomeWorshipResponseDto {
 	private final String userName;
 	private final Boolean isPinned;
 	private final List<HomeWorshipCommentResponseDto> comments;
-	private final String createdAt;
-	private final String updatedAt;
+	private final Long createdAt;
+	private final Long updatedAt;
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private HomeWorshipResponseDto(HomeWorship homeworship) {
@@ -34,15 +33,10 @@ public class HomeWorshipResponseDto {
 		this.comments = homeworship.getComments().stream()
 			.map(HomeWorshipCommentResponseDto::from)
 			.toList();
-		this.createdAt = homeworship.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		this.updatedAt = homeworship.getUpdatedAt() != null
-			? homeworship.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-			: null;
+		this.createdAt = homeworship.getCreatedAt();
+		this.updatedAt = homeworship.getUpdatedAt();
 	}
 
-	/**
-	 * 정적 팩토리 메서드
-	 */
 	public static HomeWorshipResponseDto from(HomeWorship homeworship) {
 		return HomeWorshipResponseDto.builder()
 			.homeworship(homeworship)

@@ -1,7 +1,5 @@
 package org.example.luvbackend.dto.video;
 
-import java.time.format.DateTimeFormatter;
-
 import org.example.luvbackend.entity.video.Video;
 
 import lombok.AccessLevel;
@@ -17,7 +15,7 @@ public class VideoResponseDto {
 	private final String mainText;
 	private final String preacher;
 	private final String type;
-	private final String createdAt;
+	private final Long createdAt;
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private VideoResponseDto(Video video) {
@@ -28,12 +26,9 @@ public class VideoResponseDto {
 		this.mainText = video.getMainText();
 		this.preacher = video.getPreacher();
 		this.type = video.getType();
-		this.createdAt = video.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		this.createdAt = video.getCreatedAt();
 	}
 
-	/**
-	 * 정적 팩토리 메서드
-	 */
 	public static VideoResponseDto from(Video video) {
 		return VideoResponseDto.builder()
 			.video(video)

@@ -1,6 +1,5 @@
 package org.example.luvbackend.dto.missionnews;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.example.luvbackend.entity.missionnews.MissionNews;
@@ -18,8 +17,8 @@ public class MissionNewsResponseDto {
 	private final String date;
 	private final String location;
 	private final List<String> imageUrls;
-	private final String createdAt;
-	private final String updatedAt;
+	private final Long createdAt;
+	private final Long updatedAt;
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private MissionNewsResponseDto(MissionNews missionNews) {
@@ -30,15 +29,10 @@ public class MissionNewsResponseDto {
 		this.date = missionNews.getDate();
 		this.location = missionNews.getLocation();
 		this.imageUrls = missionNews.getImageUrls();
-		this.createdAt = missionNews.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		this.updatedAt = missionNews.getUpdatedAt() != null
-			? missionNews.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-			: null;
+		this.createdAt = missionNews.getCreatedAt();
+		this.updatedAt = missionNews.getUpdatedAt();
 	}
 
-	/**
-	 * 정적 팩토리 메서드
-	 */
 	public static MissionNewsResponseDto from(MissionNews missionNews) {
 		return MissionNewsResponseDto.builder()
 			.missionNews(missionNews)
