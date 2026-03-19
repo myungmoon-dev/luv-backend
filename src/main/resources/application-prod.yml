@@ -1,0 +1,17 @@
+spring:
+  data:
+    ## 몽고 DB
+    mongodb:
+      uri: mongodb+srv://myungmoondev:${MONGO_PW}@luv.fr7ah.mongodb.net/?retryWrites=true&w=majority&appName=luv
+      database: ${MONGO_DBNAME}
+  ## AWS
+  cloud:
+    aws:
+      ## IMAGE 업로드 버킷
+      s3:
+        bucket: ${AWS_S3_BUCKET}
+      credentials:
+        access-key: ${AWS_S3_ACCESS_KEY}
+        secret-key: ${AWS_S3_SECRET_KEY}
+      region:
+        static: ap-northeast-2
