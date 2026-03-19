@@ -70,8 +70,8 @@ public class BookService {
 	public void deleteBook(String id) {
 		Book book = bookRepository.findByIdOrElseThrow(id);
 
-		awsS3Service.delete(book.getImageUrls().get(0));
-		bookRepository.delete(book);
+		awsS3Service.deleteFiles(book.getImageUrls()); // 이미지 삭제
+		bookRepository.delete(book); // DB 삭제
 	}
 
 }

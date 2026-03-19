@@ -58,7 +58,7 @@ public class HomeWorshipService {
 			String hashedPassword = passwordEncoder.encode(form.getPassword());
 			return HomeWorshipResponseDto.from(homeworshipRepository.save(HomeWorship.of(form, imageUrls, hashedPassword)));
 		} catch (Exception e) {
-			imageUrls.forEach(awsS3Service::delete);
+			awsS3Service.deleteFiles(imageUrls); // 이미지 삭제
 			throw e;
 		}
 	}
@@ -78,7 +78,7 @@ public class HomeWorshipService {
 			homeworship.update(date, form.getTitle(), form.getContent(), mergedImageUrls);
 			return HomeWorshipResponseDto.from(homeworshipRepository.save(homeworship));
 		} catch (Exception e) {
-			uploadedUrls.forEach(awsS3Service::delete);
+			awsS3Service.deleteFiles(uploadedUrls); // 이미지 삭제
 			throw e;
 		}
 	}

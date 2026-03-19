@@ -88,9 +88,17 @@ public class AwsS3Service {
 	}
 
 	/**
+	 * 다건 파일 삭제
+	 */
+	public void deleteFiles(List<String> fileUrls) {
+		if (fileUrls == null || fileUrls.isEmpty()) return;
+		fileUrls.forEach(this::deleteFile);
+	}
+
+	/**
 	 * 단건 파일 삭제
 	 */
-	public void delete(String fileUrl) {
+	public void deleteFile(String fileUrl) {
 		String key = URI.create(fileUrl).getPath().substring(1); // ex. albums/1234567890_image.jpg
 
 		awsS3Client.deleteObject(
