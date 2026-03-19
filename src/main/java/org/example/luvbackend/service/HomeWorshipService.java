@@ -90,7 +90,9 @@ public class HomeWorshipService {
 	public void deleteHomeWorship(String id, HomeworshipDeleteForm form) {
 		HomeWorship homeworship = homeworshipRepository.findByIdOrElseThrow(id);
 		verifyPassword(form.getPassword(), homeworship.getPassword());
-		homeworshipRepository.delete(homeworship);
+
+		awsS3Service.deleteFiles(homeworship.getImageUrls()); // 이미지 삭제
+		homeworshipRepository.delete(homeworship); // DB 삭제
 	}
 
 	/**
