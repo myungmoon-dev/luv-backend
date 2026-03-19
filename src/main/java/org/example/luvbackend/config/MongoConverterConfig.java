@@ -1,5 +1,6 @@
 package org.example.luvbackend.config;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.example.luvbackend.entity.album.AlbumType;
@@ -82,6 +83,15 @@ public class MongoConverterConfig {
 		}
 	}
 
+	// Instant → Long 컨버터 (Spring Data Auditing: DateTimeProvider가 반환하는 Instant를 Long으로 저장)
+	@WritingConverter
+	public static class InstantToLongConverter implements Converter<Instant, Long> {
+		@Override
+		public Long convert(Instant source) {
+			return source.toEpochMilli();
+		}
+	}
+
 	// Double → Long 컨버터 (Node.js Date.now()가 Double로 저장된 기존 데이터 호환)
 	@ReadingConverter
 	public static class DoubleToLongConverter implements Converter<Double, Long> {
@@ -100,6 +110,7 @@ public class MongoConverterConfig {
 			new VideoTypeToStringConverter(),
 			new StringToCongregationNewsTypeConverter(),
 			new CongregationNewsTypeToStringConverter(),
+			new InstantToLongConverter(),
 			new DoubleToLongConverter(),
 			new StringToBooleanConverter()
 		));
