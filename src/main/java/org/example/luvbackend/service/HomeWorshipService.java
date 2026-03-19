@@ -1,7 +1,6 @@
 package org.example.luvbackend.service;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.example.luvbackend.dto.aws.S3Directory;
 import org.example.luvbackend.dto.homeworship.CommentCreateForm;
@@ -101,13 +100,7 @@ public class HomeWorshipService {
 	public HomeWorshipResponseDto addComment(String homeWorshipId, CommentCreateForm form) {
 		HomeWorship homeworship = homeworshipRepository.findByIdOrElseThrow(homeWorshipId);
 		String hashedPassword = passwordEncoder.encode(form.getPassword());
-		HomeWorshipComment comment = HomeWorshipComment.builder()
-			.id(UUID.randomUUID().toString())
-			.userName(form.getUserName())
-			.password(hashedPassword)
-			.content(form.getContent())
-			.build();
-		homeworship.addComment(comment);
+		homeworship.addComment(HomeWorshipComment.of(form.getUserName(), hashedPassword, form.getContent()));
 		return HomeWorshipResponseDto.from(homeworshipRepository.save(homeworship));
 	}
 
@@ -115,7 +108,7 @@ public class HomeWorshipService {
 	 * 가정예배 댓글 삭제
 	 */
 	@Transactional
-	public HomeWorshipResponseDto deleteComment(String homeWorshipId, String commentId, CommentDeleteForm form) {
+	public void deleteComment(String homeWorshipId, String commentId, CommentDeleteForm form) {
 		HomeWorship homeworship = homeworshipRepository.findByIdOrElseThrow(homeWorshipId);
 		HomeWorshipComment comment = homeworship.getComments().stream()
 			.filter(c -> c.getId().equals(commentId))
@@ -123,7 +116,7 @@ public class HomeWorshipService {
 			.orElseThrow(() -> new HomeWorshipException(HomeworshipExceptionCode.NOT_FOUND_COMMENT));
 		verifyPassword(form.getPassword(), comment.getPassword());
 		homeworship.removeComment(commentId);
-		return HomeWorshipResponseDto.from(homeworshipRepository.save(homeworship));
+		homeworshipRepository.save(homeworship);
 	}
 
 	private void verifyPassword(String rawPassword, String encodedPassword) {

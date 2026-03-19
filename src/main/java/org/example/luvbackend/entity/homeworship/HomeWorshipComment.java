@@ -1,6 +1,8 @@
 package org.example.luvbackend.entity.homeworship;
 
-import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.example.luvbackend.common.entity.BaseEntity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,19 +10,26 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class HomeWorshipComment {
+public class HomeWorshipComment extends BaseEntity {
 	private String id;
 	private String userName;
 	private String password;
 	private String content;
-	private LocalDateTime createdAt;
 
 	@Builder
-	public HomeWorshipComment(String id, String userName, String password, String content) {
+	private HomeWorshipComment(String id, String userName, String password, String content) {
 		this.id = id;
 		this.userName = userName;
 		this.password = password;
 		this.content = content;
-		this.createdAt = LocalDateTime.now();
+	}
+
+	public static HomeWorshipComment of(String userName, String password, String content) {
+		return HomeWorshipComment.builder()
+			.id(UUID.randomUUID().toString())
+			.userName(userName)
+			.password(password)
+			.content(content)
+			.build();
 	}
 }
