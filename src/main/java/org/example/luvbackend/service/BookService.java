@@ -68,7 +68,10 @@ public class BookService {
 	 */
 	@Transactional
 	public void deleteBook(String id) {
-		bookRepository.delete(bookRepository.findByIdOrElseThrow(id));
+		Book book = bookRepository.findByIdOrElseThrow(id);
+
+		awsS3Service.delete(book.getImageUrls().get(0));
+		bookRepository.delete(book);
 	}
 
 }
