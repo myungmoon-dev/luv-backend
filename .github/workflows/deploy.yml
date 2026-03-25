@@ -52,8 +52,10 @@ jobs:
           envs: MONGO_PW,MONGO_DBNAME,AWS_S3_BUCKET,AWS_S3_ACCESS_KEY,AWS_S3_SECRET_KEY
           script: |
             pkill -f 'java -jar' || true
+            sleep 3
             nohup java -Xms256m -Xmx768m \
               -XX:MaxMetaspaceSize=200m \
               -jar /home/ubuntu/app/app.jar \
               --spring.profiles.active=prod \
               > /home/ubuntu/app.log 2>&1 &
+            disown
