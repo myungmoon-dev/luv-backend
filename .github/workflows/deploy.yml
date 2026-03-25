@@ -51,7 +51,9 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           envs: MONGO_PW,MONGO_DBNAME,AWS_S3_BUCKET,AWS_S3_ACCESS_KEY,AWS_S3_SECRET_KEY
           script: |
-            pkill -f 'app.jar' || true
-            nohup java -jar /home/ubuntu/app/*.jar \
+            pkill -f 'java -jar' || true
+            nohup java -Xms256m -Xmx768m \
+              -XX:MaxMetaspaceSize=200m \
+              -jar /home/ubuntu/app/app.jar \
               --spring.profiles.active=prod \
               > /home/ubuntu/app.log 2>&1 &
