@@ -1,4 +1,30 @@
+server:
+  tomcat:
+    threads:
+      max: 50        # 동시에 처리할 수 있는 최대 요청 수
+      min-spare: 5   # 항상 대기 중인 최소 스레드 수
+    max-connections: 200   # Tomcat이 받을 수 있는 최대 TCP 연결 수
+    accept-count: 50       # max-connections 초과 시 대기열 크기
+    connection-timeout: 5000  # 5초 안에 요청 안오면 연결 끊음
+
 spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10    # DB 커넥션 최대 10개 유지
+      minimum-idle: 3          # 유휴 상태에서도 최소 3개 유지
+      connection-timeout: 30000   # 커넥션 못 얻으면 30초 후 에러
+      idle-timeout: 600000        # 놀고 있는 커넥션 10분 후 반납
+      max-lifetime: 1800000       # 커넥션 최대 수명 30분 (DB 강제 종료 방지)
+  jpa:
+    open-in-view: false         # 커넥션 점유 방지
+    hibernate:
+      ddl-auto: validate
+
+  # 불필요한 자동설정 제외: JMX(Java Management Extensions) 관리 빈 자동 생성을 비활성화
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration
+
   data:
     ## 몽고 DB
     mongodb:
