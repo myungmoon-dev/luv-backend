@@ -38,6 +38,6 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
-            pkill -f 'java -jar' || true
+            pkill -f '/home/ubuntu/app/app.jar' || true
             sleep 3
             nohup java -Xms256m -Xmx768m -XX:MaxMetaspaceSize=200m -jar /home/ubuntu/app/app.jar --spring.profiles.active=prod > /home/ubuntu/app.log 2>&1 &
