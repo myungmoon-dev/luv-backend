@@ -37,7 +37,19 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
+          script_stop: false # 스크립트 실패해도 멈추지 말라는 옵션 (kill 안될 수도 있어서)
           script: |
-            pkill -f '/home/ubuntu/app/app.jar' || true
-            sleep 3
-            nohup java -Xms256m -Xmx768m -XX:MaxMetaspaceSize=200m -jar /home/ubuntu/app/app.jar --spring.profiles.active=prod > /home/ubuntu/app.log 2>&1 &
+            echo "배포 중인 애플리케이션 종료 후 start.sh 실행"
+            cd /home/ubuntu/app
+            chmod +x start.sh
+            ./start.sh
+
+            echo "**** 주기적으로 로그 정리 필요 ****"            
+            sleep 2
+            echo "애플리케이션 실행 확인"
+            ps -ef | grep "app.jar" | grep -v grep || echo "Application failed to start ❌"
+            
+            sleep 15
+            sudo lsof -i:8080 || echo "PORT 8080 is not in use ❌"
+            
+            echo "Deployment completed successfully 🚀"
