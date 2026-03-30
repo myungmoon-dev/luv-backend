@@ -1,5 +1,8 @@
 package org.example.luvbackend.repository;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 import org.example.luvbackend.entity.bulletin.Bulletin;
 import org.example.luvbackend.exception.bulletin.BulletinException;
 import org.example.luvbackend.exception.bulletin.BulletinExceptionCode;
@@ -16,4 +19,6 @@ public interface BulletinRepository extends MongoRepository<Bulletin, String> {
 		return findById(bulletinId)
 			.orElseThrow(() -> new BulletinException(BulletinExceptionCode.NOT_FOUND_BULLETIN));
 	}
+
+	Optional<Bulletin> findByDate(String date);
 }
