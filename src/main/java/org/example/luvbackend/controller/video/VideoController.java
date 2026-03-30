@@ -1,8 +1,7 @@
 package org.example.luvbackend.controller.video;
 
-import java.util.List;
-
 import org.example.luvbackend.common.dto.ApiResponse;
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.video.VideoCreateForm;
 import org.example.luvbackend.dto.video.VideoResponseDto;
 import org.example.luvbackend.dto.video.VideoUpdateForm;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -28,13 +28,17 @@ import lombok.RequiredArgsConstructor;
 public class VideoController {
 	private final VideoService videoService;
 
+	@Operation(summary = "다건 유튜브타입별 영상조회")
 	@GetMapping
-	public ApiResponse<List<VideoResponseDto>> getVideos(
-		@RequestParam(name = "type", required = false) String type
+	public ApiResponse<PageResponse<VideoResponseDto>> getVideos(
+		@RequestParam(name = "type", required = false, defaultValue = "") String type,
+		@RequestParam(name = "page", defaultValue = "0") int page,
+		@RequestParam(name = "size", defaultValue = "10") int size
 	) {
-		return ApiResponse.success(videoService.getVideos(type));
+		return ApiResponse.success(videoService.getVideos(type, page, size));
 	}
 
+	@Operation(summary = "단건 유튜브영상 생성")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ApiResponse<VideoResponseDto> createVideo(
@@ -43,6 +47,7 @@ public class VideoController {
 		return ApiResponse.created(videoService.createVideo(form));
 	}
 
+	@Operation(summary = "단건 유튜브영상 수정")
 	@PatchMapping("/{id}")
 	public ApiResponse<VideoResponseDto> updateVideo(
 		@PathVariable(name = "id") String id,
@@ -51,6 +56,7 @@ public class VideoController {
 		return ApiResponse.success(videoService.updateVideo(id, form));
 	}
 
+	@Operation(summary = "단건 유튜브영상 삭제")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ApiResponse<Void> deleteVideo(
