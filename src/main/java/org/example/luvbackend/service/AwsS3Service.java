@@ -74,6 +74,25 @@ public class AwsS3Service {
 	}
 
 	/**
+	 * byte 배열을 지정된 key로 S3에 업로드 후 URL 반환
+	 */
+	public String uploadBytes(byte[] bytes, String key, String contentType) {
+		awsS3Client.putObject(
+			PutObjectRequest.builder()
+				.bucket(bucket)
+				.key(key)
+				.contentType(contentType)
+				.contentLength((long) bytes.length)
+				.build(),
+			RequestBody.fromBytes(bytes)
+		);
+
+		return awsS3Client.utilities()
+			.getUrl(b -> b.bucket(bucket).key(key))
+			.toString();
+	}
+
+	/**
 	 * 기존 이미지 URL과 새로 업로드된 URL을 병합하는 메서드
 	 * - 둘 다 없으면 빈 리스트 반환 → update()에서 기존 값 유지
 	 */
