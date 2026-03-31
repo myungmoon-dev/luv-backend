@@ -1,5 +1,7 @@
 package org.example.luvbackend.controller.homeworship;
 
+import java.util.List;
+
 import org.example.luvbackend.common.dto.ApiResponse;
 import org.example.luvbackend.dto.homeworship.CommentCreateForm;
 import org.example.luvbackend.dto.homeworship.CommentDeleteForm;
@@ -76,6 +78,16 @@ public class HomeWorshipController {
 		@RequestBody @Valid HomeworshipDeleteForm form
 	) {
 		homeworshipService.deleteHomeWorship(id, form);
+		return ApiResponse.noContent();
+	}
+
+	@Operation(summary = "다건 가정예배 삭제")
+	@DeleteMapping
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public ApiResponse<Void> deleteHomeWorships(
+		@RequestBody List<String> ids
+	) {
+		homeworshipService.deleteHomeWorships(ids);
 		return ApiResponse.noContent();
 	}
 

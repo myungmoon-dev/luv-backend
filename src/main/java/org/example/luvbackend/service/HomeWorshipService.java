@@ -96,6 +96,16 @@ public class HomeWorshipService {
 	}
 
 	/**
+	 * 다건 가정예배 삭제
+	 */
+	@Transactional
+	public void deleteHomeWorships(List<String> ids) {
+		List<HomeWorship> homeWorships = homeworshipRepository.findAllById(ids);
+		homeWorships.forEach(hw -> awsS3Service.deleteFiles(hw.getImageUrls()));
+		homeworshipRepository.deleteAll(homeWorships);
+	}
+
+	/**
 	 * 가정예배 댓글 추가
 	 */
 	@Transactional
