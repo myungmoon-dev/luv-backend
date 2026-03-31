@@ -52,6 +52,7 @@ public class HomeWorshipService {
 	 * 단건 가정예배 생성
 	 * S3 업로드는 트랜잭션 밖에서 먼저 수행, DB 저장 실패 시 업로드된 파일 보상 삭제
 	 */
+	@Transactional
 	public HomeWorshipResponseDto createHomeWorship(HomeWorshipCreateForm form) {
 		List<String> imageUrls = awsS3Service.uploadFiles(form.getImages(), S3Directory.HOMEWORSHIPS);
 		try {
@@ -67,6 +68,7 @@ public class HomeWorshipService {
 	 * 단건 가정예배 수정
 	 * S3 업로드는 트랜잭션 밖에서 먼저 수행, DB 저장 실패 시 새로 업로드된 파일 보상 삭제
 	 */
+	@Transactional
 	public HomeWorshipResponseDto updateHomeWorship(String id, HomeWorshipUpdateForm form) {
 		HomeWorship homeworship = homeworshipRepository.findByIdOrElseThrow(id);
 		verifyPassword(form.getPassword(), homeworship.getPassword());
@@ -75,7 +77,7 @@ public class HomeWorshipService {
 		try {
 			List<String> mergedImageUrls = awsS3Service.mergeImageUrls(form.getExistingImageUrls(), uploadedUrls);
 			String date = form.getDate() != null ? form.getDate().toString() : null;
-			homeworship.update(date, form.getTitle(), form.getContent(), mergedImageUrls);
+			homeworship.update(date, form.getTitle(), form.getContent(), form.getUserName(), form.getIsPinned(), mergedImageUrls);
 			return HomeWorshipResponseDto.from(homeworshipRepository.save(homeworship));
 		} catch (Exception e) {
 			awsS3Service.deleteFiles(uploadedUrls); // 이미지 삭제
