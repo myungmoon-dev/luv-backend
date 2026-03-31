@@ -7,11 +7,15 @@ import org.example.luvbackend.service.BulletinService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -31,9 +35,17 @@ public class BulletinController {
 	@GetMapping
 	public ApiResponse<Page<BulletinResponseDto>> getBulletins(
 		@RequestParam(name = "page", defaultValue = "0") int page,
-		@RequestParam(name = "size", defaultValue = "10") int size
+		@RequestParam(name = "size", defaultValue = "10") int size,
+		@RequestParam(name = "year", required = false) String year,
+		@RequestParam(name = "month", required = false) String month
 	) {
-		return ApiResponse.success(bulletinService.getBulletins(page, size));
+		return ApiResponse.success(bulletinService.getBulletins(page, size, year, month));
+	}
+
+	@Operation(summary = "주보 존재 연/월 조회")
+	@GetMapping("/dates")
+	public ApiResponse<Map<String, List<String>>> getAvailableDates() {
+		return ApiResponse.success(bulletinService.getAvailableDates());
 	}
 
 	@Operation(summary = "단건 주보 조회")
@@ -60,6 +72,16 @@ public class BulletinController {
 		@PathVariable(name = "id") String id
 	) {
 		bulletinService.deleteBulletin(id);
+		return ApiResponse.noContent();
+	}
+
+	@Operation(summary = "다건 주보 삭제")
+	@DeleteMapping
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public ApiResponse<Void> deleteBulletins(
+		@RequestBody List<String> ids
+	) {
+		bulletinService.deleteBulletins(ids);
 		return ApiResponse.noContent();
 	}
 }

@@ -1,6 +1,10 @@
 package org.example.luvbackend.service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.example.luvbackend.dto.bulletin.BulletinResponseDto;
 import org.example.luvbackend.dto.bulletin.BulletinUploadForm;
@@ -24,11 +28,16 @@ public class BulletinService {
 	private final PdfService pdfService;
 
 	/**
-	 * 다건 페이징 주보 조회
+	 * 다건 페이징 주보 조회 (year+month 필터 optional)
 	 */
 	@Transactional(readOnly = true)
-	public Page<BulletinResponseDto> getBulletins(int page, int size) {
+	public Page<BulletinResponseDto> getBulletins(int page, int size, String year, String month) {
 		Pageable pageable = PageRequest.of(page, size);
+		if (year != null && month != null) {
+			return bulletinRepository.findAllByDateStartingWithOrderByDateDesc(year + "-" + month, pageable)
+				.map(BulletinResponseDto::from);
+		}
+
 		return bulletinRepository.findAllByOrderByDateDesc(pageable)
 			.map(BulletinResponseDto::from);
 	}
@@ -48,9 +57,7 @@ public class BulletinService {
 	public BulletinResponseDto createBulletin(BulletinUploadForm form) {
 		log.info("주보 생성 - title: {}, date: {}, filename: {}", form.getTitle(), form.getDate(), form.getPdf().getOriginalFilename());
 
-		/**
-		 * 동일날짜에 이미 존재하면 삭제 후 재업로드
-		 */
+		// 동일날짜에 이미 존재하면 삭제 후 재업로드
 		bulletinRepository.findByDate(form.getDate().toString())
 			.ifPresent(existing -> {
 				log.info("동일 날짜 주보 존재 - 기존 데이터 삭제: {}", existing.getId());
@@ -73,4 +80,42 @@ public class BulletinService {
 		awsS3Service.deleteFiles(fromDB.getImageUrls());
 		bulletinRepository.delete(fromDB);
 	}
+
+	/**
+	 * 다건 주보 삭제
+	 */
+	@Transactional
+	public void deleteBulletins(List<String> ids) {
+		log.info("주보 일괄 삭제 - ids: {}", ids);
+		List<Bulletin> bulletins = bulletinRepository.findAllById(ids);
+
+		bulletins.forEach(
+			bulletin -> awsS3Service.deleteFiles(bulletin.getImageUrls())); // 이미지 삭제
+		bulletinRepository.deleteAll(bulletins); // DB 삭제
+	}
+
+	/**
+	 * 존재하는 주보 연도/월 추출 (ex. { "2026" : ["01", "02", "03"], ... }
+	 */
+	@Transactional(readOnly = true)
+	public Map<String, List<String>> getAvailableDates() {
+		List<Bulletin> bulletins = bulletinRepository.findAllYearAndDates();
+
+		// "2026-03-29" → 연도/월 추출
+		Map<String, List<String>> result = new LinkedHashMap<>();
+
+		bulletins.stream()
+			.map(b -> b.getDate().substring(0, 7)) // "2026-03"
+			.distinct()
+			.sorted(Comparator.reverseOrder())
+			.forEach(yearMonth -> {
+				String year = yearMonth.substring(0, 4);
+				String month = yearMonth.substring(5, 7);
+				result.computeIfAbsent(year,
+					ifYearKeyNotExist -> new ArrayList<>()).add(month);
+			});
+
+		return result;
+	}
+
 }
