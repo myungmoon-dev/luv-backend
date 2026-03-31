@@ -1,5 +1,6 @@
 package org.example.luvbackend.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.example.luvbackend.dto.bulletin.BulletinResponseDto;
+import org.example.luvbackend.dto.bulletin.BulletinUpdateForm;
 import org.example.luvbackend.dto.bulletin.BulletinUploadForm;
 import org.example.luvbackend.entity.bulletin.Bulletin;
 import org.example.luvbackend.repository.BulletinRepository;
@@ -67,6 +69,29 @@ public class BulletinService {
 
 		List<String> imageUrls = pdfService.convertAndUpload(form.getPdf(), form.getDate()); // PDFBOX 사용하여 IMAGE 추출
 		return BulletinResponseDto.from(bulletinRepository.save(Bulletin.of(form, imageUrls)));
+	}
+
+	/**
+	 * 단건 주보 수정 (날짜만 / PDF만 / 날짜+PDF)
+	 */
+	@Transactional
+	public BulletinResponseDto updateBulletin(String id, BulletinUpdateForm form) {
+		Bulletin bulletin = bulletinRepository.findByIdOrElseThrow(id);
+
+		if (form.getDate() != null) {
+			bulletin.updateDate(form.getDate().toString());
+		}
+
+		if (form.getPdf() != null && !form.getPdf().isEmpty()) {
+			awsS3Service.deleteFiles(bulletin.getImageUrls());
+
+			LocalDate date = form.getDate() != null ? form.getDate() : LocalDate.parse(bulletin.getDate());
+			List<String> imageUrls = pdfService.convertAndUpload(form.getPdf(), date);
+
+			bulletin.updateImageUrls(imageUrls);
+		}
+
+		return BulletinResponseDto.from(bulletinRepository.save(bulletin));
 	}
 
 	/**
