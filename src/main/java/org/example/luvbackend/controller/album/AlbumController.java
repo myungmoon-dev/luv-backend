@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.example.luvbackend.common.dto.ApiResponse;
 import org.example.luvbackend.common.dto.PageResponse;
+import org.example.luvbackend.dto.album.AlbumUpdateForm;
 import org.example.luvbackend.dto.album.AlbumUploadForm;
 import org.example.luvbackend.dto.album.AlbumResponseDto;
 import org.example.luvbackend.service.AlbumService;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,6 +65,15 @@ public class AlbumController {
 		@PathVariable(name = "id") String id
 	) {
 		return ApiResponse.success(albumService.getAlbum(id));
+	}
+
+	@Operation(summary = "단건 앨범 수정")
+	@PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ApiResponse<AlbumResponseDto> updateAlbum(
+		@PathVariable(name = "id") String id,
+		@ModelAttribute @Valid AlbumUpdateForm form
+	) {
+		return ApiResponse.success(albumService.updateAlbum(id, form));
 	}
 
 	/**
