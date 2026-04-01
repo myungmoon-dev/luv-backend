@@ -1,6 +1,7 @@
 package org.example.luvbackend.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.aws.S3Directory;
@@ -68,5 +69,21 @@ public class AlbumService {
 
 		awsS3Service.deleteFiles(fromDB.getImageUrls()); // 이미지 삭제
 		albumRepository.delete(fromDB); // DB 삭제
+	}
+
+	/**
+	 * 다건 앨범데이터 삭제 메서드
+	 */
+	@Transactional
+	public void deleteAlbums(List<String> ids) {
+		List<Album> albums = albumRepository.findAllById(ids);
+
+		// 이미지리스트를 하나의 리스트로 생성
+		List<String> imageUrls = albums.stream()
+			.flatMap(album -> album.getImageUrls().stream())
+			.collect(Collectors.toList());
+
+		awsS3Service.deleteFiles(imageUrls);
+		albumRepository.deleteAll(albums);
 	}
 }

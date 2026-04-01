@@ -1,5 +1,7 @@
 package org.example.luvbackend.controller.album;
 
+import java.util.List;
+
 import org.example.luvbackend.common.dto.ApiResponse;
 import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.album.AlbumUploadForm;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,7 +42,7 @@ public class AlbumController {
 
 	/**
 	 * 다건 앨범 조회 메서드
-	 * @param type 앨범종류 (main, infants, toddlers, elementary, middle, high, youth, qt, panorama, newFamily, newlyweds, 3040)
+	 * @param type 앨범종류 (main, infants, toddlers, children, teens, youth, qt, panorama, newFamily, newlyweds, 3040)
 	 */
 	@Operation(summary = "페이징 다건 타입별 앨범 조회")
 	@GetMapping
@@ -72,6 +75,16 @@ public class AlbumController {
 		@PathVariable(name = "id") String id
 	) {
 		albumService.deleteAlbum(id);
+		return ApiResponse.noContent();
+	}
+
+	@Operation(summary = "다건 앨범 삭제")
+	@DeleteMapping
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public ApiResponse<Void> deleteAlbums(
+		@RequestBody List<String> ids
+	) {
+		albumService.deleteAlbums(ids);
 		return ApiResponse.noContent();
 	}
 }
