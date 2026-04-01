@@ -44,6 +44,41 @@ public class AwsS3Service {
 	}
 
 	/**
+	 * 다건 파일 업로드 - key 리스트를 직접 받아 업로드 (files[i] → keys[i])
+	 */
+	public List<String> uploadFiles(List<MultipartFile> files, List<String> keys) {
+		if (files == null || files.isEmpty()) return List.of();
+
+		List<String> urls = new ArrayList<>();
+		for (int i = 0; i < files.size(); i++) {
+			MultipartFile file = files.get(i);
+			if (file == null || file.isEmpty()) continue;
+			urls.add(uploadFile(file, keys.get(i)));
+		}
+		return urls;
+	}
+
+	/**
+	 * 단건 파일 업로드 - key를 직접 지정
+	 */
+	public String uploadFile(MultipartFile file, String key) {
+		try {
+			awsS3Client.putObject(
+				PutObjectRequest.builder()
+					.bucket(bucket)
+					.key(key)
+					.contentType(file.getContentType())
+					.contentLength(file.getSize())
+					.build(),
+				RequestBody.fromInputStream(file.getInputStream(), file.getSize())
+			);
+		} catch (IOException e) {
+			throw new AwsS3Exception(AwsS3ExceptionCode.FILE_UPLOAD_FAILED);
+		}
+		return awsS3Client.utilities().getUrl(b -> b.bucket(bucket).key(key)).toString();
+	}
+
+	/**
 	 * 단건 파일 업로드 후 URL 반환 메서드
 	 */
 	public String uploadFile(MultipartFile file, S3Directory s3Directory) {
