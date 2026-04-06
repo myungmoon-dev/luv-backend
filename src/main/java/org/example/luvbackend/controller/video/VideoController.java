@@ -3,6 +3,7 @@ package org.example.luvbackend.controller.video;
 import java.util.List;
 
 import org.example.luvbackend.common.dto.ApiResponse;
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.video.VideoCreateForm;
 import org.example.luvbackend.dto.video.VideoResponseDto;
 import org.example.luvbackend.dto.video.VideoUpdateForm;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -28,11 +30,15 @@ import lombok.RequiredArgsConstructor;
 public class VideoController {
 	private final VideoService videoService;
 
+	@Operation(summary = "페이징 다건 타입별 영상 조회")
 	@GetMapping
-	public ApiResponse<List<VideoResponseDto>> getVideos(
-		@RequestParam(name = "type", required = false) String type
+	public ApiResponse<PageResponse<VideoResponseDto>> getVideos(
+		@RequestParam(name = "type", required = false) String type,
+		@RequestParam(name = "page", defaultValue = "0") int page,
+		@RequestParam(name = "size", defaultValue = "10") int size
+
 	) {
-		return ApiResponse.success(videoService.getVideos(type));
+		return ApiResponse.success(videoService.getVideos(type, page, size));
 	}
 
 	@PostMapping

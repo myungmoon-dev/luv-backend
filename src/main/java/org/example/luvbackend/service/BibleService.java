@@ -1,5 +1,6 @@
 package org.example.luvbackend.service;
 
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.bible.BibleCreateForm;
 import org.example.luvbackend.dto.bible.BibleResponseDto;
 import org.example.luvbackend.entity.bible.Bible;
@@ -21,10 +22,10 @@ public class BibleService {
 	 * 다건 페이징 성경통독 조회
 	 */
 	@Transactional(readOnly = true)
-	public Page<BibleResponseDto> getBibles(int page, int size) {
+	public PageResponse<BibleResponseDto> getBibles(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		return bibleRepository.findAllByOrderByCreatedAtDesc(pageable)
-			.map(BibleResponseDto::from);
+		return PageResponse.of(bibleRepository.findAllByOrderByCreatedAtDesc(pageable)
+			.map(BibleResponseDto::from));
 	}
 
 	/**
