@@ -2,13 +2,13 @@ package org.example.luvbackend.service;
 
 import java.util.List;
 
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.aws.S3Directory;
 import org.example.luvbackend.dto.book.BookResponseDto;
 import org.example.luvbackend.dto.book.BookUpdateForm;
 import org.example.luvbackend.dto.book.BookUploadForm;
 import org.example.luvbackend.entity.book.Book;
 import org.example.luvbackend.repository.BookRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,10 +26,12 @@ public class BookService {
 	 * 다건 페이징 추천도서 조회
 	 */
 	@Transactional(readOnly = true)
-	public Page<BookResponseDto> getBooks(int page, int size) {
+	public PageResponse<BookResponseDto> getBooks(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		return bookRepository.findAllByOrderByCreatedAtDesc(pageable)
-			.map(BookResponseDto::from);
+		return PageResponse.of(
+			bookRepository.findAllByOrderByCreatedAtDesc(pageable)
+				.map(BookResponseDto::from)
+		);
 	}
 
 	/**

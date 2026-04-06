@@ -1,10 +1,10 @@
 package org.example.luvbackend.controller.bible;
 
 import org.example.luvbackend.common.dto.ApiResponse;
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.bible.BibleCreateForm;
 import org.example.luvbackend.dto.bible.BibleResponseDto;
 import org.example.luvbackend.service.BibleService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +28,7 @@ public class BibleController {
 
 	@Operation(summary = "다건 페이징 성경통독 조회")
 	@GetMapping
-	public ApiResponse<Page<BibleResponseDto>> getBibles(
+	public ApiResponse<PageResponse<BibleResponseDto>> getBibles(
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size
 	) {

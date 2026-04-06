@@ -2,12 +2,12 @@ package org.example.luvbackend.service;
 
 import java.util.List;
 
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.aws.S3Directory;
 import org.example.luvbackend.dto.bulletin.BulletinResponseDto;
 import org.example.luvbackend.dto.bulletin.BulletinUploadForm;
 import org.example.luvbackend.entity.bulletin.Bulletin;
 import org.example.luvbackend.repository.BulletinRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,10 +25,12 @@ public class BulletinService {
 	 * 다건 페이징 주보 조회
 	 */
 	@Transactional(readOnly = true)
-	public Page<BulletinResponseDto> getBulletins(int page, int size) {
+	public PageResponse<BulletinResponseDto> getBulletins(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		return bulletinRepository.findAllByOrderByDateDesc(pageable)
-			.map(BulletinResponseDto::from);
+		return PageResponse.of(
+			bulletinRepository.findAllByOrderByDateDesc(pageable)
+				.map(BulletinResponseDto::from)
+		);
 	}
 
 	/**

@@ -2,6 +2,7 @@ package org.example.luvbackend.service;
 
 import java.util.List;
 
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.aws.S3Directory;
 import org.example.luvbackend.dto.missionnews.MissionNewsCreateForm;
 import org.example.luvbackend.dto.missionnews.MissionNewsResponseDto;
@@ -26,14 +27,18 @@ public class MissionNewsService {
 	 * 다건 지역별 선교 소식 조회
 	 */
 	@Transactional(readOnly = true)
-	public Page<MissionNewsResponseDto> getMissionNewsList(String location, int page, int size) {
+	public PageResponse<MissionNewsResponseDto> getMissionNewsList(String location, int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		if (location != null && !location.isBlank()) {
-			return missionNewsRepository.findByLocationOrderByCreatedAtDesc(location, pageable)
-				.map(MissionNewsResponseDto::from);
+			return PageResponse.of(
+				missionNewsRepository.findByLocationOrderByCreatedAtDesc(location, pageable)
+					.map(MissionNewsResponseDto::from)
+			);
 		}
-		return missionNewsRepository.findAllByOrderByCreatedAtDesc(pageable)
-			.map(MissionNewsResponseDto::from);
+		return PageResponse.of(
+			missionNewsRepository.findAllByOrderByCreatedAtDesc(pageable)
+				.map(MissionNewsResponseDto::from)
+		);
 	}
 
 	/**
