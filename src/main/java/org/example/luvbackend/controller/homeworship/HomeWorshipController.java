@@ -1,6 +1,7 @@
 package org.example.luvbackend.controller.homeworship;
 
 import org.example.luvbackend.common.dto.ApiResponse;
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.homeworship.CommentCreateForm;
 import org.example.luvbackend.dto.homeworship.CommentDeleteForm;
 import org.example.luvbackend.dto.homeworship.HomeWorshipCreateForm;
@@ -8,7 +9,6 @@ import org.example.luvbackend.dto.homeworship.HomeworshipDeleteForm;
 import org.example.luvbackend.dto.homeworship.HomeWorshipResponseDto;
 import org.example.luvbackend.dto.homeworship.HomeWorshipUpdateForm;
 import org.example.luvbackend.service.HomeWorshipService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,7 +33,7 @@ public class HomeWorshipController {
 	private final HomeWorshipService homeworshipService;
 
 	@GetMapping
-	public ApiResponse<Page<HomeWorshipResponseDto>> getHomeWorships(
+	public ApiResponse<PageResponse<HomeWorshipResponseDto>> getHomeWorships(
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size
 	) {

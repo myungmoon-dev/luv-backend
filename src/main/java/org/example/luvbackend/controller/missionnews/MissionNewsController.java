@@ -1,11 +1,11 @@
 package org.example.luvbackend.controller.missionnews;
 
 import org.example.luvbackend.common.dto.ApiResponse;
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.missionnews.MissionNewsCreateForm;
 import org.example.luvbackend.dto.missionnews.MissionNewsResponseDto;
 import org.example.luvbackend.dto.missionnews.MissionNewsUpdateForm;
 import org.example.luvbackend.service.MissionNewsService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +29,7 @@ public class MissionNewsController {
 	private final MissionNewsService missionNewsService;
 
 	@GetMapping
-	public ApiResponse<Page<MissionNewsResponseDto>> getMissionNewsList(
+	public ApiResponse<PageResponse<MissionNewsResponseDto>> getMissionNewsList(
 		@RequestParam(name = "location", required = false) String location,
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size

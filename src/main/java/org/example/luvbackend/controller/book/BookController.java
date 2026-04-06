@@ -1,11 +1,11 @@
 package org.example.luvbackend.controller.book;
 
 import org.example.luvbackend.common.dto.ApiResponse;
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.book.BookResponseDto;
 import org.example.luvbackend.dto.book.BookUpdateForm;
 import org.example.luvbackend.dto.book.BookUploadForm;
 import org.example.luvbackend.service.BookService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +31,7 @@ public class BookController {
 
 	@Operation(summary = "다건 페이징 추천도서 조회")
 	@GetMapping
-	public ApiResponse<Page<BookResponseDto>> getBooks(
+	public ApiResponse<PageResponse<BookResponseDto>> getBooks(
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size
 	) {

@@ -1,10 +1,10 @@
 package org.example.luvbackend.controller.bulletin;
 
 import org.example.luvbackend.common.dto.ApiResponse;
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.bulletin.BulletinResponseDto;
 import org.example.luvbackend.dto.bulletin.BulletinUploadForm;
 import org.example.luvbackend.service.BulletinService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +29,7 @@ public class BulletinController {
 
 	@Operation(summary = "다건 페이징 주보 조회")
 	@GetMapping
-	public ApiResponse<Page<BulletinResponseDto>> getBulletins(
+	public ApiResponse<PageResponse<BulletinResponseDto>> getBulletins(
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size
 	) {
