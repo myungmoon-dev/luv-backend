@@ -1,6 +1,6 @@
 package org.example.luvbackend.dto.missionnews;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,8 +22,8 @@ public class MissionNewsUpdateForm {
 	private String content;
 	private String userName;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate date;
+	@DateTimeFormat(pattern = "yyyy-MM")
+	private YearMonth date;
 
 	private String location;
 

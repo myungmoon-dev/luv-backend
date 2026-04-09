@@ -12,7 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Document(collection = "missionNews")
+@Document(collection = "missionNewsList")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MissionNews extends BaseEntity {

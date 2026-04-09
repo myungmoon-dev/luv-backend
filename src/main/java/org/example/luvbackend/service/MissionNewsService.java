@@ -2,13 +2,13 @@ package org.example.luvbackend.service;
 
 import java.util.List;
 
+import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.aws.S3Directory;
 import org.example.luvbackend.dto.missionnews.MissionNewsCreateForm;
 import org.example.luvbackend.dto.missionnews.MissionNewsResponseDto;
 import org.example.luvbackend.dto.missionnews.MissionNewsUpdateForm;
 import org.example.luvbackend.entity.missionnews.MissionNews;
 import org.example.luvbackend.repository.MissionNewsRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,14 +26,17 @@ public class MissionNewsService {
 	 * 다건 지역별 선교 소식 조회
 	 */
 	@Transactional(readOnly = true)
-	public Page<MissionNewsResponseDto> getMissionNewsList(String location, int page, int size) {
+	public PageResponse<MissionNewsResponseDto> getMissionNewsList(String location, int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		if (location != null && !location.isBlank()) {
-			return missionNewsRepository.findByLocationOrderByCreatedAtDesc(location, pageable)
-				.map(MissionNewsResponseDto::from);
+			return PageResponse.of(
+				missionNewsRepository.findByLocationOrderByCreatedAtDesc(location, pageable)
+				.map(MissionNewsResponseDto::from));
 		}
-		return missionNewsRepository.findAllByOrderByCreatedAtDesc(pageable)
-			.map(MissionNewsResponseDto::from);
+		return PageResponse.of(
+			missionNewsRepository.findAllByOrderByCreatedAtDesc(pageable)
+				.map(MissionNewsResponseDto::from)
+		);
 	}
 
 	/**
@@ -78,5 +81,18 @@ public class MissionNewsService {
 		awsS3Service.deleteFiles(fromDB.getImageUrls()); // 이미지 삭제
 		missionNewsRepository.delete(fromDB); // DB 삭제
 	}
+
+	/**
+	 * 다건 주보 삭제
+	 */
+	@Transactional
+	public void deleteMissionNewList(List<String> ids) {
+		List<MissionNews> missionNewsList = missionNewsRepository.findAllById(ids);
+
+		missionNewsList.forEach(
+			missionNews -> awsS3Service.deleteFiles(missionNews.getImageUrls())); // 이미지 삭제
+		missionNewsRepository.deleteAll(missionNewsList); // DB 삭제
+	}
+
 
 }
