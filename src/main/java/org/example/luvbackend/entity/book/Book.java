@@ -1,6 +1,6 @@
 package org.example.luvbackend.entity.book;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.example.luvbackend.common.entity.BaseEntity;
@@ -50,7 +50,7 @@ public class Book extends BaseEntity {
 	/**
 	 * 업데이트 메서드 - null인 필드는 기존 값 유지 (PATCH 방식)
 	 */
-	public void update(String title, String content, String writer, LocalDate date, List<String> imageUrls) {
+	public void update(String title, String content, String writer, YearMonth date, List<String> imageUrls) {
 		if (title != null) this.title = title;
 		if (content != null) this.content = content;
 		if (writer != null) this.writer = writer;
