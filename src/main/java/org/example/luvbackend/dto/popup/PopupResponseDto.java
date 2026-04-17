@@ -15,7 +15,7 @@ public class PopupResponseDto {
 	public PopupResponseDto(Popup popup) {
 		this.id = popup.getId();
 		this.title = popup.getTitle();
-		this.isShow = popup.isShow();
+		this.isShow = popup.getIsShow();
 		this.imageUrl = popup.getImageUrl();
 		this.createdAt = popup.getCreatedAt();
 	}
