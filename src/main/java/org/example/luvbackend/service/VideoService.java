@@ -1,9 +1,11 @@
 package org.example.luvbackend.service;
 
 import org.example.luvbackend.common.dto.PageResponse;
+import org.example.luvbackend.dto.album.AlbumResponseDto;
 import org.example.luvbackend.dto.video.VideoCreateForm;
 import org.example.luvbackend.dto.video.VideoResponseDto;
 import org.example.luvbackend.dto.video.VideoUpdateForm;
+import org.example.luvbackend.entity.album.AlbumType;
 import org.example.luvbackend.entity.video.Video;
 import org.example.luvbackend.entity.video.VideoType;
 import org.example.luvbackend.repository.VideoRepository;

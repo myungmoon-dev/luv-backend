@@ -3,6 +3,9 @@ package org.example.luvbackend.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import org.example.luvbackend.common.dto.PageResponse;
+import org.example.luvbackend.dto.aws.S3Directory;
 import org.example.luvbackend.dto.homeworship.CommentCreateForm;
 import org.example.luvbackend.dto.homeworship.CommentDeleteForm;
 import org.example.luvbackend.dto.homeworship.HomeWorshipCreateForm;
@@ -35,10 +38,12 @@ public class HomeWorshipService {
 	 * 다건 페이징 가정예배 조회
 	 */
 	@Transactional(readOnly = true)
-	public Page<HomeWorshipResponseDto> getHomeWorships(int page, int size) {
+	public PageResponse<HomeWorshipResponseDto> getHomeWorships(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		return homeworshipRepository.findAllByOrderByCreatedAtDesc(pageable)
-			.map(HomeWorshipResponseDto::from);
+		return PageResponse.of(
+			homeworshipRepository.findAllByOrderByCreatedAtDesc(pageable)
+				.map(HomeWorshipResponseDto::from)
+		);
 	}
 
 	/**
