@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AlbumRepository extends MongoRepository<Album, String> {
-	Page<Album> findByTypeOrderByCreatedAtDesc(AlbumType type, Pageable pageable);
+	Page<Album> findByTypeOrderByDateDesc(AlbumType type, Pageable pageable);
 
-	Page<Album> findAllByOrderByCreatedAtDesc(Pageable pageable);
+	Page<Album> findAllByOrderByDateDesc(Pageable pageable);
 
 	default Album findByIdOrElseThrow(String albumId) {
 		return findById(albumId)

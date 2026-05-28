@@ -1,6 +1,6 @@
 package org.example.luvbackend.dto.book;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,8 +28,8 @@ public class BookUploadForm {
 	private String writer;
 
 	@NotNull(message = "날짜는 필수 입력값입니다.")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate date;
+	@DateTimeFormat(pattern = "yyyy-MM")
+	private YearMonth date;
 
 	@Size(max = 5, message = "이미지는 최대 5개까지 업로드 가능합니다.")
 	private List<MultipartFile> images;

@@ -39,4 +39,12 @@ public class Bulletin extends BaseEntity {
 			.imageUrls(imageUrls)
 			.build();
 	}
+
+	public void updateDate(String date) {
+		this.date = date;
+	}
+
+	public void updateImageUrls(List<String> imageUrls) {
+		this.imageUrls = imageUrls;
+	}
 }

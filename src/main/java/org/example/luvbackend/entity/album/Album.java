@@ -45,6 +45,16 @@ public class Album extends BaseEntity {
 	}
 
 	/**
+	 * 업데이트 메서드 - null인 필드는 기존 값 유지 (PATCH 방식)
+	 */
+	public void update(String title, String date, AlbumType type, List<String> imageUrls) {
+		if (title != null) this.title = title;
+		if (date != null) this.date = date;
+		if (type != null) this.type = type;
+		if (imageUrls != null && !imageUrls.isEmpty()) this.imageUrls = imageUrls;
+	}
+
+	/**
 	 * 앨범의 카테고리를 String 형식으로 반환하는 메서드
 	 */
 	public String getType() {

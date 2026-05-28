@@ -59,10 +59,12 @@ public class HomeWorship extends BaseEntity {
 	/**
 	 * 업데이트 메서드 - null인 필드는 기존 값 유지 (PATCH 방식)
 	 */
-	public void update(String date, String title, String content, List<String> imageUrls) {
+	public void update(String date, String title, String content, String userName, Boolean isPinned, List<String> imageUrls) {
 		if (date != null) this.date = date;
 		if (title != null) this.title = title;
 		if (content != null) this.content = content;
+		if (userName != null) this.userName = userName;
+		if (isPinned != null) this.isPinned = isPinned;
 		if (imageUrls != null && !imageUrls.isEmpty()) this.imageUrls = imageUrls;
 	}
 

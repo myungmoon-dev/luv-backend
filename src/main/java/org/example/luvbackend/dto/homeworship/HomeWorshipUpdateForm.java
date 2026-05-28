@@ -25,6 +25,10 @@ public class HomeWorshipUpdateForm {
 
 	private String content;
 
+	private String userName;
+
+	private Boolean isPinned;
+
 	@NotBlank(message = "비밀번호는 필수 입력값입니다.") // 본인 인증에 필요하므로 항상 필수
 	private String password;
 

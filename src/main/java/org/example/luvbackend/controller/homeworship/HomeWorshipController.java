@@ -1,5 +1,7 @@
 package org.example.luvbackend.controller.homeworship;
 
+import java.util.List;
+
 import org.example.luvbackend.common.dto.ApiResponse;
 import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.homeworship.CommentCreateForm;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 public class HomeWorshipController {
 	private final HomeWorshipService homeworshipService;
 
+	@Operation(summary = "다건 페이징 가정예배 조회")
 	@GetMapping
 	public ApiResponse<PageResponse<HomeWorshipResponseDto>> getHomeWorships(
 		@RequestParam(name = "page", defaultValue = "0") int page,
@@ -40,6 +44,7 @@ public class HomeWorshipController {
 		return ApiResponse.success(homeworshipService.getHomeWorships(page, size));
 	}
 
+	@Operation(summary = "단건 가정예배 조회")
 	@GetMapping("/{id}")
 	public ApiResponse<HomeWorshipResponseDto> getHomeWorship(
 		@PathVariable(name = "id") String id
@@ -47,6 +52,7 @@ public class HomeWorshipController {
 		return ApiResponse.success(homeworshipService.getHomeWorship(id));
 	}
 
+	@Operation(summary = "단건 가정예배 생성")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public ApiResponse<HomeWorshipResponseDto> createHomeWorship(
@@ -55,6 +61,7 @@ public class HomeWorshipController {
 		return ApiResponse.created(homeworshipService.createHomeWorship(form));
 	}
 
+	@Operation(summary = "단건 가정예배 수정")
 	@PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ApiResponse<HomeWorshipResponseDto> updateHomeWorship(
 		@PathVariable(name = "id") String id,
@@ -63,6 +70,7 @@ public class HomeWorshipController {
 		return ApiResponse.success(homeworshipService.updateHomeWorship(id, form));
 	}
 
+	@Operation(summary = "단건 가정예배 삭제")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ApiResponse<Void> deleteHomeWorship(
@@ -73,6 +81,17 @@ public class HomeWorshipController {
 		return ApiResponse.noContent();
 	}
 
+	@Operation(summary = "다건 가정예배 삭제")
+	@DeleteMapping
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public ApiResponse<Void> deleteHomeWorships(
+		@RequestBody List<String> ids
+	) {
+		homeworshipService.deleteHomeWorships(ids);
+		return ApiResponse.noContent();
+	}
+
+	@Operation(summary = "단건 가정예배 댓글 생성")
 	@PostMapping("/{id}/comments")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ApiResponse<HomeWorshipResponseDto> addComment(
@@ -82,6 +101,7 @@ public class HomeWorshipController {
 		return ApiResponse.created(homeworshipService.addComment(id, form));
 	}
 
+	@Operation(summary = "단건 가정예배 댓글 삭제")
 	@DeleteMapping("/{id}/comments/{commentId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ApiResponse<Void> deleteComment(
