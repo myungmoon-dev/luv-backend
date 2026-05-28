@@ -28,10 +28,10 @@ import lombok.RequiredArgsConstructor;
 public class VideoController {
 	private final VideoService videoService;
 
-	@Operation(summary = "다건 유튜브타입별 영상조회")
+	@Operation(summary = "페이징 다건 타입별 영상 조회")
 	@GetMapping
 	public ApiResponse<PageResponse<VideoResponseDto>> getVideos(
-		@RequestParam(name = "type", required = false, defaultValue = "") String type,
+		@RequestParam(name = "type", required = false) String type,
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size
 	) {

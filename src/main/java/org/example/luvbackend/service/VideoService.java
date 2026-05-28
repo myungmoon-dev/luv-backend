@@ -4,10 +4,12 @@ import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.video.VideoCreateForm;
 import org.example.luvbackend.dto.video.VideoResponseDto;
 import org.example.luvbackend.dto.video.VideoUpdateForm;
+import org.example.luvbackend.entity.album.AlbumType;
 import org.example.luvbackend.entity.video.Video;
 import org.example.luvbackend.entity.video.VideoType;
 import org.example.luvbackend.repository.VideoRepository;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +25,16 @@ public class VideoService {
 	 */
 	@Transactional(readOnly = true)
 	public PageResponse<VideoResponseDto> getVideos(String type, int page, int size) {
-		if (type != null && !type.isBlank()) {
-			VideoType videoType = VideoType.deserialize(type);
-			return PageResponse.of(videoRepository.findByTypeOrderByCreatedAtDesc(videoType, PageRequest.of(page, size))
+		// 타입이 없을 경우
+		if (type == null || type.isBlank()) {
+			Pageable pageable = PageRequest.of(page, size);
+			return PageResponse.of(videoRepository.findAllByOrderByCreatedAtDesc(pageable)
 				.map(VideoResponseDto::from));
 		}
-		return PageResponse.of(videoRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size))
-			.map(VideoResponseDto::from));
+		VideoType videoType = VideoType.deserialize(type);
+		return PageResponse.of(videoRepository.findByTypeOrderByCreatedAtDesc(videoType, PageRequest.of(page, size))
+			.map(VideoResponseDto::from)
+		);
 	}
 
 	/**

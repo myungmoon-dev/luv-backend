@@ -31,7 +31,8 @@ public class MissionNewsService {
 		if (location != null && !location.isBlank()) {
 			return PageResponse.of(
 				missionNewsRepository.findByLocationOrderByCreatedAtDesc(location, pageable)
-				.map(MissionNewsResponseDto::from));
+					.map(MissionNewsResponseDto::from)
+			);
 		}
 		return PageResponse.of(
 			missionNewsRepository.findAllByOrderByCreatedAtDesc(pageable)
