@@ -10,7 +10,7 @@ public enum S3Directory {
 	BOOKS("books"),
 	BULLETINS("bulletins"),
 	HOMEWORSHIPS("homeworships"),
-	MISSION_NEWS("mission-news"),
+	MISSION_NEWS("missionNewsList"),
 	POPUPS("popups");
 
 	private final String path;

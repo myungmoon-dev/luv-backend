@@ -42,6 +42,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.4.2'
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
+    implementation 'org.apache.pdfbox:pdfbox:3.0.7'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

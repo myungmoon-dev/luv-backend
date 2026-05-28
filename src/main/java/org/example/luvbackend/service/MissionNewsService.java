@@ -9,7 +9,6 @@ import org.example.luvbackend.dto.missionnews.MissionNewsResponseDto;
 import org.example.luvbackend.dto.missionnews.MissionNewsUpdateForm;
 import org.example.luvbackend.entity.missionnews.MissionNews;
 import org.example.luvbackend.repository.MissionNewsRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -83,5 +82,18 @@ public class MissionNewsService {
 		awsS3Service.deleteFiles(fromDB.getImageUrls()); // 이미지 삭제
 		missionNewsRepository.delete(fromDB); // DB 삭제
 	}
+
+	/**
+	 * 다건 주보 삭제
+	 */
+	@Transactional
+	public void deleteMissionNewList(List<String> ids) {
+		List<MissionNews> missionNewsList = missionNewsRepository.findAllById(ids);
+
+		missionNewsList.forEach(
+			missionNews -> awsS3Service.deleteFiles(missionNews.getImageUrls())); // 이미지 삭제
+		missionNewsRepository.deleteAll(missionNewsList); // DB 삭제
+	}
+
 
 }

@@ -3,29 +3,24 @@ package org.example.luvbackend.entity.album;
 import org.example.luvbackend.exception.album.AlbumException;
 import org.example.luvbackend.exception.album.AlbumExceptionCode;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @RequiredArgsConstructor
 public enum AlbumType {
-	ALL("all"),
-	MAIN("main"),
-	INFANTS("infants"),
-	TODDLERS("toddlers"),
-	ELEMENTARY("elementary"),
-	MIDDLE("middle"),
-	HIGH("high"),
-	YOUTH("youth"),
-	QT("qt"),
-	PANORAMA("panorama"),
-	NEW_FAMILY("newFamily"),
-	NEWLY_WEDDINGS("newlyweds"),
-	GEN_3040("3040");
+	MAIN("main"),         // 전체행사
+	INFANTS("infants"),   // 영아부
+	TODDLERS("toddlers"), // 유치부
+	CHILDREN("children"), // 유초등부
+	TEENS("teens"),       // 중고등부
+	YOUTH("youth"),       // 청년부
+	BRIDGE("bridge"),     // 브릿지
+	QT("qt"),             // QT
+	PANORAMA("panorama"), // 파노라마
+	NEW_FAMILY("newFamily"),       // 새가족부
+	NEWLY_WEDDINGS("newlyweds"),   // 신혼부부
+	GEN_3040("3040");              // 3040
 
 	private final String value;
 

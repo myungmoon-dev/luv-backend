@@ -1,13 +1,12 @@
 package org.example.luvbackend.dto.book;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +25,8 @@ public class BookUpdateForm {
 
 	private String content;
 	private String writer;
-	private LocalDate date;
+	@DateTimeFormat(pattern = "yyyy-MM")
+	private YearMonth date;
 
 	// 유지할 기존 이미지 URL 목록 (클라이언트가 삭제하지 않을 이미지 URL을 명시적으로 전달)
 	private List<String> existingImageUrls;

@@ -19,4 +19,7 @@ public class PopupUploadForm {
 
 	@NotNull(message = "이미지는 필수 입력값입니다.")
 	private MultipartFile image;
+
+	@NotNull(message = "공개여부는 필수 입력값입니다.")
+	private Boolean isShow;
 }

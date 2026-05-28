@@ -5,7 +5,6 @@ import org.example.luvbackend.dto.bible.BibleCreateForm;
 import org.example.luvbackend.dto.bible.BibleResponseDto;
 import org.example.luvbackend.entity.bible.Bible;
 import org.example.luvbackend.repository.BibleRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

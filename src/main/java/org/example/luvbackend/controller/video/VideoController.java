@@ -1,7 +1,5 @@
 package org.example.luvbackend.controller.video;
 
-import java.util.List;
-
 import org.example.luvbackend.common.dto.ApiResponse;
 import org.example.luvbackend.common.dto.PageResponse;
 import org.example.luvbackend.dto.video.VideoCreateForm;
@@ -41,6 +39,7 @@ public class VideoController {
 		return ApiResponse.success(videoService.getVideos(type, page, size));
 	}
 
+	@Operation(summary = "단건 유튜브영상 생성")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ApiResponse<VideoResponseDto> createVideo(
@@ -49,6 +48,7 @@ public class VideoController {
 		return ApiResponse.created(videoService.createVideo(form));
 	}
 
+	@Operation(summary = "단건 유튜브영상 수정")
 	@PatchMapping("/{id}")
 	public ApiResponse<VideoResponseDto> updateVideo(
 		@PathVariable(name = "id") String id,
@@ -57,6 +57,7 @@ public class VideoController {
 		return ApiResponse.success(videoService.updateVideo(id, form));
 	}
 
+	@Operation(summary = "단건 유튜브영상 삭제")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ApiResponse<Void> deleteVideo(
