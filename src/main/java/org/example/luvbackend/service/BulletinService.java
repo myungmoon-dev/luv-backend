@@ -34,12 +34,8 @@ public class BulletinService {
 	 * 다건 페이징 주보 조회 (year+month 필터 optional)
 	 */
 	@Transactional(readOnly = true)
-	public PageResponse<BulletinResponseDto> getBulletins(int page, int size, String year, String month) {
+	public PageResponse<BulletinResponseDto> getBulletins(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		if (year != null && month != null) {
-			return PageResponse.of(bulletinRepository.findAllByDateStartingWithOrderByDateDesc(year + "-" + month, pageable)
-				.map(BulletinResponseDto::from));
-		}
 		return PageResponse.of(
 			bulletinRepository.findAllByOrderByDateDesc(pageable)
 				.map(BulletinResponseDto::from)

@@ -34,6 +34,7 @@ public class VideoController {
 		@RequestParam(name = "type", required = false) String type,
 		@RequestParam(name = "page", defaultValue = "0") int page,
 		@RequestParam(name = "size", defaultValue = "10") int size
+
 	) {
 		return ApiResponse.success(videoService.getVideos(type, page, size));
 	}
