@@ -37,11 +37,9 @@ public class BulletinController {
 	@GetMapping
 	public ApiResponse<PageResponse<BulletinResponseDto>> getBulletins(
 		@RequestParam(name = "page", defaultValue = "0") int page,
-		@RequestParam(name = "size", defaultValue = "10") int size,
-		@RequestParam(name = "year", required = false) String year,
-		@RequestParam(name = "month", required = false) String month
+		@RequestParam(name = "size", defaultValue = "10") int size
 	) {
-		return ApiResponse.success(bulletinService.getBulletins(page, size, year, month));
+		return ApiResponse.success(bulletinService.getBulletins(page, size));
 	}
 
 	@Operation(summary = "주보 존재 연/월 조회")
