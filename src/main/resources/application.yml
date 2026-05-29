@@ -1,6 +1,11 @@
 spring:
   application:
     name: luv-backend
+  web:
+    cors:
+      allowed-origin-patterns: "*"
+      allowed-methods: "*"
+      allowed-headers: "*"
   servlet:
     multipart:
       max-file-size: 10MB
