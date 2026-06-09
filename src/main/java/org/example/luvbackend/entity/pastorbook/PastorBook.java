@@ -10,7 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Document(collection = "pastor_books")
+@Document(collection = "pastorBooks")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PastorBook extends BaseEntity {

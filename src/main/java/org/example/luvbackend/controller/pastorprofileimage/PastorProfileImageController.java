@@ -7,7 +7,7 @@ import org.example.luvbackend.service.PastorProfileImageService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +27,7 @@ public class PastorProfileImageController {
 	}
 
 	@Operation(summary = "담임목사 프로필 이미지 수정")
-	@PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PatchMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ApiResponse<PastorProfileImageResponseDto> updatePastorProfileImage(
 		@ModelAttribute PastorProfileImageForm form
 	) {
