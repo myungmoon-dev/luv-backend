@@ -54,7 +54,7 @@ public class PastorBookService {
 	// leadership/pastor/pastorBooks/{title}.{ext}
 	private String buildKey(MultipartFile file, String title) {
 		String ext = getExtension(file);
-		return String.format("leadership/pastor/pastorBooks/%s.%s", title, ext);
+		return String.format("leadership/pastor/senior/books/%s.%s", title, ext);
 	}
 
 	private String getExtension(MultipartFile file) {
