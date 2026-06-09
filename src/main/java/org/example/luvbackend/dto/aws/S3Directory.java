@@ -11,7 +11,8 @@ public enum S3Directory {
 	BULLETINS("bulletins"),
 	HOMEWORSHIPS("homeworships"),
 	MISSION_NEWS("missionNewsList"),
-	POPUPS("popups");
+	POPUPS("popups"),
+	LEADERSHIP("leadership");
 
 	private final String path;
 }
