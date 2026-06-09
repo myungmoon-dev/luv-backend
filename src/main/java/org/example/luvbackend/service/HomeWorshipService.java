@@ -41,7 +41,7 @@ public class HomeWorshipService {
 	public PageResponse<HomeWorshipResponseDto> getHomeWorships(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		return PageResponse.of(
-			homeworshipRepository.findAllByOrderByCreatedAtDesc(pageable)
+			homeworshipRepository.findAllByOrderByDateDesc(pageable)
 				.map(HomeWorshipResponseDto::from)
 		);
 	}

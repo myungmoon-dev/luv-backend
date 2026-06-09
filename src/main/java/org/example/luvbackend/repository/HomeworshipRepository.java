@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HomeworshipRepository extends MongoRepository<HomeWorship, String> {
-	Page<HomeWorship> findAllByOrderByCreatedAtDesc(Pageable pageable);
+	Page<HomeWorship> findAllByOrderByDateDesc(Pageable pageable);
 
 	default HomeWorship findByIdOrElseThrow(String homeworshipId) {
 		return findById(homeworshipId)

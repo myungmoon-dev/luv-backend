@@ -29,11 +29,11 @@ public class VideoService {
 		// 타입이 없을 경우
 		if (type == null || type.isBlank()) {
 			Pageable pageable = PageRequest.of(page, size);
-			return PageResponse.of(videoRepository.findAllByOrderByCreatedAtDesc(pageable)
+			return PageResponse.of(videoRepository.findAllByOrderByDateDesc(pageable)
 				.map(VideoResponseDto::from));
 		}
 		VideoType videoType = VideoType.deserialize(type);
-		return PageResponse.of(videoRepository.findByTypeOrderByCreatedAtDesc(videoType, PageRequest.of(page, size))
+		return PageResponse.of(videoRepository.findByTypeOrderByDateDesc(videoType, PageRequest.of(page, size))
 			.map(VideoResponseDto::from)
 		);
 	}
