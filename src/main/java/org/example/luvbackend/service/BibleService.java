@@ -23,7 +23,7 @@ public class BibleService {
 	@Transactional(readOnly = true)
 	public PageResponse<BibleResponseDto> getBibles(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		return PageResponse.of(bibleRepository.findAllByOrderByCreatedAtDesc(pageable)
+		return PageResponse.of(bibleRepository.findAllByOrderByDateDesc(pageable)
 			.map(BibleResponseDto::from));
 	}
 

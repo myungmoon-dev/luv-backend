@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BibleRepository extends MongoRepository<Bible, String> {
-	Page<Bible> findAllByOrderByCreatedAtDesc(Pageable pageable);
+	Page<Bible> findAllByOrderByDateDesc(Pageable pageable);
 
 	default Bible findByIdOrElseThrow(String bibleId) {
 		return findById(bibleId)

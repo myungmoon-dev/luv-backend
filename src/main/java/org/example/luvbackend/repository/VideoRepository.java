@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VideoRepository extends MongoRepository<Video, String> {
-	Page<Video> findByTypeOrderByCreatedAtDesc(VideoType type, Pageable pageable);
+	Page<Video> findByTypeOrderByDateDesc(VideoType type, Pageable pageable);
 
-	Page<Video> findAllByOrderByCreatedAtDesc(Pageable pageable);
+	Page<Video> findAllByOrderByDateDesc(Pageable pageable);
 
 	default Video findByIdOrElseThrow(String videoId) {
 		return findById(videoId)
