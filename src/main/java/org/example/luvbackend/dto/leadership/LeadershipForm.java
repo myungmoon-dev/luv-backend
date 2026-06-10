@@ -19,5 +19,6 @@ public class LeadershipForm {
 	private String position;
 	private String greeting;
 	private String description;
+	private String order;
 	private MultipartFile image;
 }

@@ -10,9 +10,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LeadershipRepository extends MongoRepository<Leadership, String> {
-	Page<Leadership> findAllByOrderByCreatedAtDesc(Pageable pageable);
+	Page<Leadership> findAllByOrderByOrderAsc(Pageable pageable);
 
-	Page<Leadership> findByTabTypeOrderByCreatedAtDesc(String tabType, Pageable pageable);
+	Page<Leadership> findByTabTypeOrderByOrderAsc(String tabType, Pageable pageable);
+
+	boolean existsByTabTypeAndOrder(String tabType, Integer order);
+
+	boolean existsByTabTypeAndOrderAndIdNot(String tabType, Integer order, String id);
 
 	default Leadership findByIdOrElseThrow(String id) {
 		return findById(id)

@@ -14,6 +14,7 @@ public class LeadershipResponseDto {
 	private final String tabType;
 	private final String greeting;
 	private final String description;
+	private final Integer order;
 	private final Long createdAt;
 
 	private LeadershipResponseDto(Leadership leadership) {
@@ -25,6 +26,7 @@ public class LeadershipResponseDto {
 		this.tabType = leadership.getTabType();
 		this.greeting = leadership.getGreeting();
 		this.description = leadership.getDescription();
+		this.order = leadership.getOrder();
 		this.createdAt = leadership.getCreatedAt();
 	}
 
