@@ -1,14 +1,15 @@
 name: Deploy Dev
 
 on:
-  push:
-    branches: [ dev ]
+  workflow_dispatch:  # push 트리거 제거, Actions 탭에서 수동 실행으로만 동작
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: dev  # workflow_dispatch는 브랜치 지정이 없으면 기본 브랜치를 체크아웃하므로, dev 브랜치를 명시적으로 고정
 
       - name: JDK 17 설치
         uses: actions/setup-java@v3
