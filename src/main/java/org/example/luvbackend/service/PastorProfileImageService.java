@@ -70,4 +70,9 @@ public class PastorProfileImageService {
 
 		return new PastorProfileImageResponseDto(pastorProfileImageRepository.save(profile));
 	}
+
+	private String getExtension(String filename) {
+		if (filename == null || !filename.contains(".")) return "";
+		return filename.substring(filename.lastIndexOf("."));
+	}
 }
