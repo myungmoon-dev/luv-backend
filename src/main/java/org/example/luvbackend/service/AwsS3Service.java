@@ -26,10 +26,25 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @Service
 @RequiredArgsConstructor
 public class AwsS3Service {
+	// 모든 업로드 key가 고유(UUID/타임스탬프)하므로 1년 캐싱 + 재검증 생략
+	private static final String CACHE_CONTROL = "public, max-age=31536000, immutable";
+
 	private final S3Client awsS3Client;
 
 	@Value("${spring.cloud.aws.s3.bucket}")
 	private String bucket;
+
+	@Value("${spring.cloud.aws.s3.prefix:}")
+	private String prefix; // 버킷 내 최상위 폴더 (local: dev, prod: 없음)
+
+	/**
+	 * prefix가 설정된 환경(local)에서만 key 앞에 prefix를 붙이는 메서드
+	 * ex. (prefix=dev) albums/xxx.jpg → dev/albums/xxx.jpg
+	 */
+	private String withPrefix(String key) {
+		if (prefix == null || prefix.isBlank()) return key;
+		return prefix + "/" + key;
+	}
 
 	/**
 	 * 다건 파일 업로드 후 URL 리스트 반환 메서드
@@ -61,7 +76,8 @@ public class AwsS3Service {
 	/**
 	 * 단건 파일 업로드 - key를 직접 지정
 	 */
-	public String uploadFile(MultipartFile file, String key) {
+	public String uploadFile(MultipartFile file, String inputKey) {
+		String key = withPrefix(inputKey);
 		try {
 			awsS3Client.putObject(
 				PutObjectRequest.builder()
@@ -69,6 +85,7 @@ public class AwsS3Service {
 					.key(key)
 					.contentType(file.getContentType())
 					.contentLength(file.getSize())
+					.cacheControl(CACHE_CONTROL)
 					.build(),
 				RequestBody.fromInputStream(file.getInputStream(), file.getSize())
 			);
@@ -85,7 +102,7 @@ public class AwsS3Service {
 		String dirName = s3Directory.getPath(); // ex. albums, bulletins, videos
 		String fileName = file.getOriginalFilename(); // ex. image.jpg
 		UUID uuid = UUID.randomUUID(); // ex. 1234567890
-		String key = dirName + "/" + uuid + "_" + fileName; // ex. albums/1234567890_image.jpg
+		String key = withPrefix(dirName + "/" + uuid + "_" + fileName); // ex. dev/albums/1234567890_image.jpg
 
 		try {
 			// S3 업로드
@@ -95,6 +112,7 @@ public class AwsS3Service {
 					.key(key)
 					.contentType(file.getContentType())
 					.contentLength(file.getSize())
+					.cacheControl(CACHE_CONTROL)
 					.build(),
 				RequestBody.fromInputStream(file.getInputStream(), file.getSize())
 			);
@@ -111,13 +129,15 @@ public class AwsS3Service {
 	/**
 	 * byte 배열을 지정된 key로 S3에 업로드 후 URL 반환
 	 */
-	public String uploadBytes(byte[] bytes, String key, String contentType) {
+	public String uploadBytes(byte[] bytes, String inputKey, String contentType) {
+		String key = withPrefix(inputKey);
 		awsS3Client.putObject(
 			PutObjectRequest.builder()
 				.bucket(bucket)
 				.key(key)
 				.contentType(contentType)
 				.contentLength((long) bytes.length)
+				.cacheControl(CACHE_CONTROL)
 				.build(),
 			RequestBody.fromBytes(bytes)
 		);

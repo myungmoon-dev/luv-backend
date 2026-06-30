@@ -10,6 +10,7 @@ spring:
       ## IMAGE 업로드 버킷
       s3:
         bucket: ${AWS_S3_BUCKET}
+        prefix: dev # 버킷 내 환경별 최상위 폴더 (ex. dev/albums/...)
       credentials:
         access-key: ${AWS_S3_ACCESS_KEY}
         secret-key: ${AWS_S3_SECRET_KEY}

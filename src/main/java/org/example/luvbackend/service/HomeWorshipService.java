@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.example.luvbackend.common.dto.PageResponse;
+import org.example.luvbackend.common.util.FileUtils;
 import org.example.luvbackend.dto.aws.S3Directory;
 import org.example.luvbackend.dto.homeworship.CommentCreateForm;
 import org.example.luvbackend.dto.homeworship.CommentDeleteForm;
@@ -147,17 +148,10 @@ public class HomeWorshipService {
 		List<String> keys = new ArrayList<>();
 		int index = startIndex;
 		for (MultipartFile file : files) {
-			keys.add(String.format("homeworships/%s/%s/%02d.%s", date, uuid, index++, getExtension(file)));
+			keys.add(String.format("homeworships/%s/%s/%02d%s", date, uuid, index++,
+				FileUtils.extractExtension(file.getOriginalFilename())));
 		}
 		return keys;
-	}
-
-	private String getExtension(MultipartFile file) {
-		String original = file.getOriginalFilename();
-		if (original != null && original.contains(".")) {
-			return original.substring(original.lastIndexOf('.') + 1).toLowerCase();
-		}
-		return "jpg";
 	}
 
 	private void verifyPassword(String rawPassword, String encodedPassword) {

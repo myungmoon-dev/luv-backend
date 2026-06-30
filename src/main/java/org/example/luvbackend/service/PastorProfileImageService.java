@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.example.luvbackend.common.util.FileUtils;
 import org.example.luvbackend.dto.pastorprofileimage.PastorProfileImageForm;
 import org.example.luvbackend.dto.pastorprofileimage.PastorProfileImageResponseDto;
 import org.example.luvbackend.entity.pastorprofileimage.PastorProfileImage;
@@ -51,12 +52,12 @@ public class PastorProfileImageService {
 		String now = LocalDateTime.now().format(FORMATTER);
 		if (hasTop) {
 			if (topUrl != null) awsS3Service.deleteFiles(List.of(topUrl));
-			String ext = getExtension(topImage.getOriginalFilename());
+			String ext = FileUtils.extractExtension(topImage.getOriginalFilename());
 			topUrl = awsS3Service.uploadFile(topImage, DIR + "top-" + now + ext);
 		}
 		if (hasBottom) {
 			if (bottomUrl != null) awsS3Service.deleteFiles(List.of(bottomUrl));
-			String ext = getExtension(bottomImage.getOriginalFilename());
+			String ext = FileUtils.extractExtension(bottomImage.getOriginalFilename());
 			bottomUrl = awsS3Service.uploadFile(bottomImage, DIR + "bottom-" + now + ext);
 		}
 
@@ -68,10 +69,5 @@ public class PastorProfileImageService {
 		}
 
 		return new PastorProfileImageResponseDto(pastorProfileImageRepository.save(profile));
-	}
-
-	private String getExtension(String filename) {
-		if (filename == null || !filename.contains(".")) return "";
-		return filename.substring(filename.lastIndexOf("."));
 	}
 }
