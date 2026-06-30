@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.example.luvbackend.common.dto.PageResponse;
+import org.example.luvbackend.common.util.FileUtils;
 import org.example.luvbackend.dto.leadership.LeadershipForm;
 import org.example.luvbackend.dto.leadership.LeadershipResponseDto;
 import org.example.luvbackend.entity.leadership.Leadership;
@@ -103,10 +104,8 @@ public class LeadershipService {
 	}
 
 	private String buildS3Key(String tabType, String name, MultipartFile file) {
-		String original = file.getOriginalFilename();
 		String now = LocalDateTime.now().format(FORMATTER);
-		String ext = (original != null && original.contains("."))
-			? original.substring(original.lastIndexOf(".")) : "";
+		String ext = FileUtils.extractExtension(file.getOriginalFilename());
 		String safeName = (name != null) ? name : "unknown";
 		return "leadership/" + tabType + "/" + safeName + "_" + now + ext;
 	}

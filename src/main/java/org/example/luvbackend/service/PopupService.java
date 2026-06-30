@@ -1,7 +1,10 @@
 package org.example.luvbackend.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.example.luvbackend.common.util.FileUtils;
 import org.example.luvbackend.dto.aws.S3Directory;
 import org.example.luvbackend.dto.popup.PopupResponseDto;
 import org.example.luvbackend.dto.popup.PopupUploadForm;
@@ -44,7 +47,13 @@ public class PopupService {
 		if (image.getSize() > MAX_IMAGE_SIZE) {
 			throw new PopupException(PopupExceptionCode.IMAGE_SIZE_OVER_FORM);
 		}
-		String imageUrl = awsS3Service.uploadFile(image, S3Directory.POPUPS);
+		// 파일명을 "팝업제목_업로드날짜시각.확장자"로 지정 (ex.제목_202606061347.jpg)
+		String uploadedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+
+		String key = S3Directory.POPUPS.getPath() + "/" + FileUtils.sanitize(form.getTitle()) + "_" + uploadedAt
+			+ FileUtils.extractExtension(image.getOriginalFilename());
+
+		String imageUrl = awsS3Service.uploadFile(image, key);
 		Popup popup = Popup.builder()
 			.title(form.getTitle())
 			.isShow(true)

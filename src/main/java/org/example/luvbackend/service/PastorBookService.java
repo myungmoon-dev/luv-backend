@@ -1,6 +1,10 @@
 package org.example.luvbackend.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.example.luvbackend.common.dto.PageResponse;
+import org.example.luvbackend.common.util.FileUtils;
 import org.example.luvbackend.dto.pastorbook.PastorBookForm;
 import org.example.luvbackend.dto.pastorbook.PastorBookResponseDto;
 import org.example.luvbackend.entity.pastorbook.PastorBook;
@@ -51,18 +55,11 @@ public class PastorBookService {
 		return new PastorBookResponseDto(pastorBookRepository.save(pastorBook));
 	}
 
-	// leadership/pastor/pastorBooks/{title}.{ext}
+	// leadership/pastor/senior/books/{제목}_{yyyyMMddHHmmss}.{ext}
 	private String buildKey(MultipartFile file, String title) {
-		String ext = getExtension(file);
-		return String.format("leadership/pastor/senior/books/%s.%s", title, ext);
-	}
-
-	private String getExtension(MultipartFile file) {
-		String original = file.getOriginalFilename();
-		if (original != null && original.contains(".")) {
-			return original.substring(original.lastIndexOf('.') + 1).toLowerCase();
-		}
-		return "png";
+		String ext = FileUtils.extractExtension(file.getOriginalFilename());
+		String uploadedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+		return String.format("leadership/pastor/senior/books/%s_%s%s", FileUtils.sanitize(title), uploadedAt, ext);
 	}
 
 	@Transactional

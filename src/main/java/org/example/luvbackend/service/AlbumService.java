@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.example.luvbackend.common.dto.PageResponse;
+import org.example.luvbackend.common.util.FileUtils;
 import org.example.luvbackend.dto.album.AlbumResponseDto;
 import org.example.luvbackend.dto.album.AlbumUpdateForm;
 import org.example.luvbackend.dto.album.AlbumUploadForm;
@@ -126,16 +127,9 @@ public class AlbumService {
 		List<String> keys = new ArrayList<>();
 		int index = startIndex;
 		for (MultipartFile file : files) {
-			keys.add(String.format("albums/%s/%s/%s/%02d.%s", type, date, uuid, index++, getExtension(file)));
+			keys.add(String.format("albums/%s/%s/%s/%02d%s", type, date, uuid, index++,
+				FileUtils.extractExtension(file.getOriginalFilename())));
 		}
 		return keys;
-	}
-
-	private String getExtension(MultipartFile file) {
-		String original = file.getOriginalFilename();
-		if (original != null && original.contains(".")) {
-			return original.substring(original.lastIndexOf('.') + 1).toLowerCase();
-		}
-		return "jpg";
 	}
 }
