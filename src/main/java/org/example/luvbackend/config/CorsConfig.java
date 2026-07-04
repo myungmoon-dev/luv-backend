@@ -20,7 +20,7 @@ public class CorsConfig implements WebMvcConfigurer {
 				"https://luv-renewal.netlify.app",
 				"https://myungmoon.or.kr",
 				"https://admin.myungmoon.or.kr",
-				"https://mini.myungmoon.or.kr",
+				"https://www.myungmoon.or.kr",
 				frontUrl
 			)
 			.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
