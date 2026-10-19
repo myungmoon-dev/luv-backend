@@ -101,7 +101,7 @@ public class AwsS3Service {
 	public String uploadFile(MultipartFile file, S3Directory s3Directory) {
 		String dirName = s3Directory.getPath(); // ex. albums, bulletins, videos
 		String fileName = file.getOriginalFilename(); // ex. image.jpg
-		UUID uuid = UUID.randomUUID(); // ex. 1234567890
+		UUID uuid = UUID.randomUUID(); // ex. 123456789
 		String key = withPrefix(dirName + "/" + uuid + "_" + fileName); // ex. dev/albums/1234567890_image.jpg
 
 		try {
